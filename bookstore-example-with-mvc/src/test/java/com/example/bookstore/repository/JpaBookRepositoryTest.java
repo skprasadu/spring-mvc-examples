@@ -1,6 +1,7 @@
 package com.example.bookstore.repository;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.bookstore.config.InfrastructureContextConfiguration;
 import com.example.bookstore.config.TestDataContextConfiguration;
 import com.example.bookstore.domain.Book;
+import com.example.bookstore.domain.BookSearchCriteria;
 import com.example.bookstore.domain.Category;
 import com.example.bookstore.domain.support.BookBuilder;
 import com.example.bookstore.domain.support.CategoryBuilder;
@@ -104,5 +106,31 @@ public class JpaBookRepositoryTest {
 
 		// Explicitly flush so any CUD query that is left behind is send to the database before rolling back
 		entityManager.flush();
+		
+		Book book1 = bookRepository.findById(book.getId());
+		
+		assertEquals(book1.getAuthor(), book.getAuthor());
+		assertEquals(book1.getDescription(), book.getDescription());
+		assertEquals(book1.getIsbn(), book.getIsbn());
 	}
+	
+	@Test
+    public void testFindBooks() {
+		BookSearchCriteria bookSearchCriteria = new BookSearchCriteria();
+		bookSearchCriteria.setTitle(book.getTitle());
+		List<Book> books = bookRepository.findBooks(bookSearchCriteria);
+		
+		for (Book book : books) {
+			assertEquals(this.book.getCategory().getId(), category.getId());
+			assertEquals(this.book.getAuthor(), book.getAuthor());
+			assertEquals(this.book.getDescription(), book.getDescription());
+			assertEquals(this.book.getIsbn(), book.getIsbn());
+		}
+    }
+
+	@Test
+    public void testFindRandom() {
+		List<Book> books = bookRepository.findRandom(0);
+		assertTrue(books.size() != 0);
+    }
 }
