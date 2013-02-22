@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Booksearch</title>
+</head>
+<body>
+<h1>#springMessage("book.title")</h1>
+
+<p>
+
+    <form method="POST">
+        <fieldset>
+            <legend>#springMessage("book.searchcriteria")</legend>
+            <table>
+                <tr><td>#springMessage("book.title")</td><td>#springFormInput("searchCriteria.title" "")</td></tr>
+                <tr><td>#springMessage("book.category")</td><td>#springFormSingleSelect("searchCriteria.category" $categories "")</td></tr>
+            </table>
+        </fieldset>
+        <button id="search">#springMessage("button.search")</button>
+    </form>
+
+    #if ($bookList.empty eq false)
+        <table>
+            <tr><th>#springMessage("book.title")</th><th>#springMessage("book.description")</th><th>#springMessage("book.price")</th></tr>
+            #foreach($book in $bookList)
+                <tr><td>${book.title}</td><td>${book.description}</td><td>${book.price}</td><td><a href="#springUrl("/cart/add/${book.id}")">#springMessage("book.addtocart")</a></tr>
+            #end
+        </table>
+    #end
+</p>
+
+</body>
+</html>
