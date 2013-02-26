@@ -3,3 +3,9 @@ bookstore-example-with-mvc/.classpath
 bookstore-example-with-mvc/.project
 bookstore-example-with-mvc/target
 bookstore-example-with-mvc/bookstore.log
+
+bookstore-example-with-mvc-webflow/.settings
+bookstore-example-with-mvc-webflow/.classpath
+bookstore-example-with-mvc-webflow/.project
+bookstore-example-with-mvc-webflow/target
+bookstore-example-with-mvc-webflow/bookstore.log

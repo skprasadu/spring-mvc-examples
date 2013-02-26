@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+	<security:global-method-security pre-post-annotations="enabled"/>
+	
+	<security:http use-expressions="true" >		
+		<security:form-login login-page="/public/authentication/login.htm" default-target-url="/public/main.htm?authenticationOk=1" authentication-failure-url="/public/authentication/login.htm?authenticationNok=1" />
+		<!--  Some browsers lookup a "favicon.ico" in the root of the application. This can cause problems as being redirected
+			  to the (non existing) favicon.ico after login, or getting a 405 not allowed.
+			  By making this (again non existing) resource public we avoid these problems.
+		 -->
+		<security:intercept-url pattern="/favicon.ico" access="permitAll"/>
+		<security:intercept-url pattern="/index.jsp" access="permitAll" />
+		<security:intercept-url pattern="/favicon.ico" access="permitAll"/>
+<!-- 		<security:intercept-url pattern="/public/authentication/**" access="permitAll" requires-channel="https" />
+ -->		<security:intercept-url pattern="/public/authentication/**" access="permitAll" />
+<!-- 		<security:intercept-url pattern="/public/createOrders/**" access="permitAll" requires-channel="https" />
+ -->		<security:intercept-url pattern="/public/createOrders/**" access="permitAll" />
+		<security:intercept-url pattern="/public/**" access="permitAll" />
+
+		<security:intercept-url pattern="/secured/**" access="fullyAuthenticated" requires-channel="https" />
+	
+		<security:intercept-url pattern="/**" access="denyAll" />
+		
+		<security:logout logout-success-url="/public/main.htm" logout-url="/logout" invalidate-session="true"/>
+	</security:http>
+	
+	<security:authentication-manager>
+		<security:authentication-provider  user-service-ref="bookstoreUserDetailsService">
+			<security:password-encoder hash="sha-256">
+				<security:salt-source user-property="username"/>
+			</security:password-encoder>
+			<!--  !!! REFACTORED !!! left here for completeness:  now using Database driven BookstoreUserDetailsService
+			<security:user-service>
+				<security:user name="jd" password="5238377ba2eac049901b54004ee9e03db62c0ab0b48133a4a162ab3aedfc809f" authorities="ROLE_CUSTOMER"/>
+			</security:user-service>
+			-->
+		</security:authentication-provider>
+	</security:authentication-manager>
+</beans>

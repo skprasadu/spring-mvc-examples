@@ -1,0 +1,19 @@
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+                          http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+	
+	<secured attributes="fullyAuthenticated"/>
+	
+	<input name="orderForm" required="true" type="com.example.bookstore.web.controller.OrderForm"/>
+	
+	<action-state id="placeOrder">
+		<evaluate expression="orderController.placeOrder(flowScope.orderForm)" result="flowScope.orderId"/>
+		<transition on="success" to="endOrderOk"/>
+	</action-state>
+
+	<end-state id="endOrderOk">
+		<output name="orderId" />
+	</end-state>
+</flow>	
+	

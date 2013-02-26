@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+
+<tiles-definitions>    
+  <definition name="fullTemplate" template="/WEB-INF/templates/template.jsp">
+        <put-attribute name="header" value="/WEB-INF/templates/header.jsp"/>
+        <put-attribute name="footer" value="/WEB-INF/templates/footer.jsp"/>
+    </definition>	
+
+    <definition name="contentOnlyTemplate" template="/WEB-INF/templates/contentOnly.jsp">
+    </definition>	
+
+	<definition name="main" extends="fullTemplate">
+        <put-attribute name="content" value="/WEB-INF/view/public/main.jsp"/>
+    </definition>
+
+	<definition name="book/detail" extends="fullTemplate">
+        <put-attribute name="content" value="/WEB-INF/view/public/book/detail.jsp"/>
+    </definition>
+
+	<definition name="show.selected.books" template="/WEB-INF/view/public/createOrders/selectBooks.jsp">
+        <put-attribute name="selectedBooks" value="/WEB-INF/view/public/createOrders/showSelectedBooks.jsp"/>
+    </definition>
+    
+	<definition name="selectBooks" extends="fullTemplate">
+        <put-attribute name="content" value="show.selected.books"/>
+    </definition>
+
+	<definition name="selectCategory" extends="fullTemplate">
+        <put-attribute name="content" value="/WEB-INF/view/public/createOrders/selectCategory.jsp"/>
+    </definition>
+	
+	<definition name="selectDeliveryOptions" extends="fullTemplate">
+        <put-attribute name="content" value="/WEB-INF/view/public/createOrders/selectDeliveryOptions.jsp"/>
+    </definition>
+
+	<definition name="login" extends="fullTemplate">
+        <put-attribute name="content" value="/WEB-INF/view/public/authentication/login.jsp"/>
+    </definition>
+
+	<definition name="orderDetail" extends="contentOnlyTemplate">
+		<put-attribute name="content" value="/WEB-INF/view/secured/ordersOverview/orderDetail.jsp"/>
+	</definition>
+
+    <definition name="ordersOverview" extends="fullTemplate">
+    	<put-attribute name="content" value="/WEB-INF/view/secured/ordersOverview/ordersOverview.jsp">
+		</put-attribute>
+	</definition>
+	
+	 <definition name="manageBooks" extends="fullTemplate">
+    	<put-attribute name="content" value="/WEB-INF/view/secured/manageBooks/manageBooks.jsp">
+		</put-attribute>
+	</definition>
+	
+</tiles-definitions>
