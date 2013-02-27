@@ -1,6 +1,7 @@
 package com.example.bookstore.web.controller;
 
 import org.mockito.Mockito;
+import org.mockito.internal.verification.VerificationModeFactory;
 import org.springframework.binding.mapping.Mapper;
 import org.springframework.binding.mapping.MappingResults;
 import org.springframework.webflow.config.FlowDefinitionResource;
@@ -37,18 +38,22 @@ public class CreateOrderTest extends AbstractXmlFlowExecutionTests {
 		MockExternalContext context = new MockExternalContext();
 		startFlow(input, context);
 
+		Mockito.verify(orderController, VerificationModeFactory.times(1)).initializeForm();
+		Mockito.verify(orderController, VerificationModeFactory.times(1)).initializeSelectableCategories();
+
 		assertCurrentStateEquals("selectCategory");
 		assertResponseWrittenEquals("selectCategory", context);
 	}
 
 	public void testSelectCategory_Next() {
 		setCurrentState("selectCategory");
-		getFlowScope().put("orderForm", createTestOrderForm());
+		OrderForm orderForm = createTestOrderForm();
+		getFlowScope().put("orderForm", orderForm);
 
 		MockExternalContext context = new MockExternalContext();
 		context.setEventId("next");
 		resumeFlow(context);
-
+		Mockito.verify(orderController, VerificationModeFactory.times(1)).initializeSelectableBooks(orderForm);
 		assertCurrentStateEquals("selectBooks");
 		assertResponseWrittenEquals("selectBooks", context);
 	}
@@ -66,14 +71,16 @@ public class CreateOrderTest extends AbstractXmlFlowExecutionTests {
 
 	public void testSelectBook_AddAndNext() {
 		setCurrentState("selectBooks");
-		getFlowScope().put("orderForm", createTestOrderForm());
+		OrderForm orderForm = createTestOrderForm();
+		getFlowScope().put("orderForm", orderForm);
 
 		MockExternalContext context = new MockExternalContext();
 		context.setEventId("add");
 		resumeFlow(context);
 
 		//Assert if book was saved
-		
+        Mockito.verify(orderController, VerificationModeFactory.times(1)).addBook(orderForm);
+
 		context.setEventId("next");
 		resumeFlow(context);		
 	}
@@ -89,7 +96,7 @@ public class CreateOrderTest extends AbstractXmlFlowExecutionTests {
 		resumeFlow(context);
 	}
 
-	public Flow createMockBookingSubflow() {
+	private Flow createMockBookingSubflow() {
 	    Flow mockBookingFlow = new Flow("secured/placeOrders");
 	    mockBookingFlow.setInputMapper(new Mapper() {
 	        public MappingResults map(Object source, Object target) {
@@ -101,6 +108,7 @@ public class CreateOrderTest extends AbstractXmlFlowExecutionTests {
 	    new EndState(mockBookingFlow, "endOrderOk");
 	    return mockBookingFlow;
 	}
+
 	private OrderForm createTestOrderForm() {
 		OrderForm orderForm = new OrderForm();
 		return orderForm;
