@@ -19,7 +19,7 @@ In this sample, we demonstrated a simple Bookstoree application using Spring MVC
 ```
     mvn clean test -Dtest=com.example.bookstore.web.controller.LoginControllerTest
 ```
-* To run the Selenium test for feontend run
+* To run the Selenium test for front-end run
 ```
     mvn -DskipTests clean package tomcat7:run
     
