@@ -8,6 +8,27 @@
 	<version>1.0</version>
 	<packaging>war</packaging>
 
+	<properties>
+		<springVersion>4.1.7.RELEASE</springVersion>
+		<springSwfVersion>2.4.1.RELEASE</springSwfVersion>
+		<springSecurityVersion>4.0.1.RELEASE</springSecurityVersion>
+		<tilesVersion>2.2.1</tilesVersion>
+		<hibernateVersion>4.1.9.Final</hibernateVersion>
+		<hibernateValidatorVersion>4.3.0.Final</hibernateValidatorVersion>
+		<commons-lang3-version>3.4</commons-lang3-version>
+		<h2-version>1.4.187</h2-version>
+		<itext-version>4.2.1</itext-version>
+		<jxl-version>2.6.12</jxl-version>
+		<jackson-mapper-asl-version>1.9.13</jackson-mapper-asl-version>
+		<commons-codec-version>1.6</commons-codec-version>
+		<junit-version>4.12</junit-version>
+		<selenium-version>2.46.0</selenium-version>
+		<javax.servlet-api-version>3.1.0</javax.servlet-api-version>
+		<jstl-version>1.2</jstl-version>
+		<mockito-all-version>2.0.2-beta</mockito-all-version>
+		<log4j-version>1.2.17</log4j-version>
+		<slf4j-api-version>1.7.12</slf4j-api-version>
+	</properties>
 	<build>
 		<plugins>
 			<plugin>
@@ -40,12 +61,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
-			<artifactId>spring-aop</artifactId>
-			<version>${springVersion}</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
 			<version>${springVersion}</version>
 			<scope>compile</scope>
@@ -57,62 +72,26 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>jcl-over-slf4j</artifactId>
-			<version>1.7.2</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>1.0.9</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.0.1</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.thoughtworks.xstream</groupId>
-			<artifactId>xstream</artifactId>
-			<version>1.4.2</version>
+			<version>${commons-lang3-version}</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-			<version>1.3.168</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>cglib</groupId>
-			<artifactId>cglib-nodep</artifactId>
-			<version>2.2.2</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.aspectj</groupId>
-			<artifactId>aspectjrt</artifactId>
-			<version>${aspectJVersion}</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.aspectj</groupId>
-			<artifactId>aspectjweaver</artifactId>
-			<version>${aspectJVersion}</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-entitymanager</artifactId>
-			<version>${hibernateVersion}</version>
+			<version>${h2-version}</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
+			<version>${hibernateVersion}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
 			<version>${hibernateVersion}</version>
 			<scope>compile</scope>
 		</dependency>
@@ -129,45 +108,33 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>net.sf.ehcache</groupId>
-			<artifactId>ehcache-core</artifactId>
-			<version>${ehCacheVersion}</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
 			<groupId>com.lowagie</groupId>
 			<artifactId>itext</artifactId>
-			<version>2.1.7</version>
+			<version>${itext-version}</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.jexcelapi</groupId>
 			<artifactId>jxl</artifactId>
-			<version>2.6.12</version>
+			<version>${jxl-version}</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
-			<version>1.9.11</version>
+			<version>${jackson-mapper-asl-version}</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
-			<version>1.6</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
-			<version>2.1</version>
+			<version>${commons-codec-version}</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.11</version>
+			<version>${junit-version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -175,6 +142,70 @@
 			<artifactId>spring-test</artifactId>
 			<version>${springVersion}</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>${javax.servlet-api-version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>jstl</groupId>
+			<artifactId>jstl</artifactId>
+			<version>${jstl-version}</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>${mockito-all-version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-firefox-driver</artifactId>
+			<version>${selenium-version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-htmlunit-driver</artifactId>
+			<version>${selenium-version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>${log4j-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j-api-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tiles</groupId>
+			<artifactId>tiles-api</artifactId>
+			<version>${tilesVersion}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tiles</groupId>
+			<artifactId>tiles-core</artifactId>
+			<version>${tilesVersion}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tiles</groupId>
+			<artifactId>tiles-servlet</artifactId>
+			<version>${tilesVersion}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tiles</groupId>
+			<artifactId>tiles-jsp</artifactId>
+			<version>${tilesVersion}</version>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.webflow</groupId>
@@ -192,12 +223,6 @@
 			<groupId>org.springframework.webflow</groupId>
 			<artifactId>spring-binding</artifactId>
 			<version>${springSwfVersion}</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>commons-codec</groupId>
-			<artifactId>commons-codec</artifactId>
-			<version>1.6</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -224,62 +249,5 @@
 			<version>${springSecurityVersion}</version>
 			<scope>compile</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-openid</artifactId>
-			<version>${springSecurityVersion}</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>3.1-b06</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.tiles</groupId>
-			<artifactId>tiles-servlet</artifactId>
-			<version>${tilesVersion}</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.tiles</groupId>
-			<artifactId>tiles-jsp</artifactId>
-			<version>${tilesVersion}</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.tiles</groupId>
-			<artifactId>tiles-api</artifactId>
-			<version>${tilesVersion}</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.tiles</groupId>
-			<artifactId>tiles-core</artifactId>
-			<version>${tilesVersion}</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>jstl</groupId>
-			<artifactId>jstl</artifactId>
-			<version>1.2</version>
-			<scope>runtime</scope>
-		</dependency>		
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
-			<version>1.9.5</version>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
-	<properties>
-		<springVersion>3.1.4.RELEASE</springVersion>
-		<tilesVersion>2.2.2</tilesVersion>
-		<springSecurityVersion>3.1.3.RELEASE</springSecurityVersion>
-		<springSwfVersion>2.3.2.RELEASE</springSwfVersion>
-		<hibernateVersion>4.1.9.Final</hibernateVersion>
-		<hibernateValidatorVersion>4.3.0.Final</hibernateValidatorVersion>
-		<ehCacheVersion>2.5.5</ehCacheVersion>
-		<aspectJVersion>1.7.1</aspectJVersion>
-	</properties>
 </project>
