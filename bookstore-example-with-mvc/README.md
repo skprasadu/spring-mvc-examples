@@ -5,19 +5,25 @@ In this sample, we demonstrated a simple Bookstoree application using Spring MVC
 
 * To run the DAO Layer testcase run
 
+```
     mvn clean test -Dtest=com.example.bookstore.repository.JpaBookRepositoryTest
+```
+
 * To run the Service Layer testcase run
-
+```
     mvn clean test -Dtest=com.example.bookstore.service.AccountServiceTest
+```
 * To run the Controller Layer testcase run
-
+```
     mvn clean test -Dtest=com.example.bookstore.web.controller.LoginControllerTest
+```
 * To run the Selenium test for feontend run
-
-    mvn clean tomcat7:run
+```
+    mvn -DskipTests clean package tomcat7:run
     
     In another window run
 
-    mvn clean test -Dtest=com.example.bookstore.web.frontend.SeleniumLoginFrontendTest
+    mvn test -Dtest=com.example.bookstore.web.frontend.SeleniumLoginFrontendTest
+```
 
 
