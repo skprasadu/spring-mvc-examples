@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+	<persistence-unit name="openjpa">
+		<provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>		
+	    	<properties>
+			<property name="openjpa.ConnectionUserName" value="postgres"/>
+			<property name="openjpa.ConnectionPassword" value="password"/>
+			<property name="openjpa.ConnectionURL" value="jdbc:postgresql://localhost:5432/pg"/>  
+			<property name="openjpa.ConnectionDriverName"  value="org.postgresql.Driver"/>
+			<property name="openjpa.jdbc.DBDictionary" value="postgres" />
+			<property name="openjpa.Log" value="SQL=TRACE"/>
+		</properties>
+	</persistence-unit>
+</persistence>

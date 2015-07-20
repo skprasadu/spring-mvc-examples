@@ -1,0 +1,46 @@
+<div ng-controller="listBooksCtrl">
+<legend class="noBold fontLegend col-md-12">List Books</legend>
+    <div class="row col-md-9">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <form class="form-horizontal noBorder" role="form">
+                    <div class="form-group">
+                        <label for="messageFilter" class="col-sm-2 control-label">Filter:</label>
+                        <div class="col-sm-4">
+                              <input type="text" class="form-control" id="messageFilter" placeholder="Filter Forms..." ng-model="query">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="row col-md-9">
+        <table class="table table-hover table-striped table-condensed">
+            <thead>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Author</th>
+                <th>ISBN</th>
+                <th>Year</th>
+                <th>Price</th>
+                 <th></th>
+            </thead>
+            <tbody>
+                <tr ng-repeat="message in messages | filter:query">
+                    <td><a ui-sref="bookecom.attributeCreate( {attid: '{{message.id}}' } )">{{message.title}}</a></td>
+                    <td>{{message.description}}</td>
+                    <td>{{message.author}}</td>
+                    <td>{{message.isbn}}</td>
+                    <td>{{message.year}}</td>
+                    <td>{{message.price}}</td>
+                    <td>
+                        <a href=""><span class="glyphicon glyphicon-remove" ng-click="deleteAttribute(message.id)" style="color:red"></span></a>
+                    <td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+	
+</div>

@@ -1,0 +1,227 @@
+{
+   "DIRECT, ADJOINT, AND LINEARIZED PROBLEM DEFINITION" : {
+      "fields" : {
+         "MATH_PROBLEM" : {
+            "label" : "MATH_PROBLEM",
+            "options" : {
+               "ADJOINT" : {
+                  "label" : "ADJOINT"
+               },
+               "DIRECT" : {
+                  "label" : "DIRECT"
+               },
+               "LINEARIZED" : {
+                  "label" : "LINEARIZED"
+               }
+            },
+            "type" : "select"
+         },
+         "PHYSICAL_PROBLEM" : {
+            "label" : "PHY_PROBLEM",
+            "options" : {
+               "EULER" : {
+                  "label" : "EULER"
+               },
+               "NAVIER_STOKES" : {
+                  "label" : "NAVIER_STOKES"
+               },
+               "NS_PLASMA" : {
+                  "label" : "NS_PLASMA"
+               }
+            },
+            "type" : "select"
+         },
+         "RESTART_SOL" : {
+            "label" : "RESTART_SOL",
+            "type" : "checkbox"
+         }
+      },
+      "label" : "DIRECT, ADJOINT, AND LINEARIZED PROBLEM DEFINITION",
+      "type" : "fieldset"
+   },
+   "COMPRESSIBLE FREE-STREAM DEFINITION" : {
+      "fields" : {
+         "AoA" : {
+            "label" : "AoA",
+            "type" : "text"
+         },
+         "FREESTREAM_PRESSURE" : {
+            "label" : "FREESTREAM_PRES (101325.0 N/m^2 by default)",
+            "type" : "text"
+         },
+         "FREESTREAM_TEMP" : {
+            "label" : "FREESTREAM_TEMP (288.15 K by default)",
+            "type" : "text"
+         },
+         "MACH_NUMBER" : {
+            "label" : "MACH_NUMBER (0 - 1)",
+            "type" : "text"
+         },
+         "SIDESLIP_ANGLE" : {
+            "label" : "SIDESLIP_ANGLE",
+            "type" : "text"
+         }
+      },
+      "label" : "COMPRESSIBLE FREE-STREAM DEFINITION",
+      "type" : "fieldset"
+   },
+   "REFERENCE VALUE DEFINITION" : {
+      "fields" : {
+         "Reference origin for moment computation" : {
+            "fields" : {
+               "REF_ORIGIN_MOMENT_X" : {
+                  "label" : "REF_ORIGIN_MOMENT_X",
+                  "type" : "text"
+               },
+               "REF_ORIGIN_MOMENT_Y" : {
+                  "label" : "REF_ORIGIN_MOMENT_Y",
+                  "type" : "text"
+               },
+               "REF_ORIGIN_MOMENT_Z" : {
+                  "label" : "REF_ORIGIN_MOMENT_Z",
+                  "type" : "text"
+               }
+            },
+            "label" : "Reference origin for moment computation",
+            "type" : "fieldset"
+         },
+         "FREESTREAM_PRESSURE" : {
+            "label" : "FREESTREAM_PRESSURE",
+            "type" : "text"
+         },
+         "FREESTREAM_TEMPERATURE" : {
+            "label" : "FREESTREAM_TEMPERATURE",
+            "type" : "text"
+         },
+         "MACH_NUMBER" : {
+            "label" : "MACH_NUMBER",
+            "type" : "text"
+         },
+         "SIDESLIP_ANGLE" : {
+            "label" : "SIDESLIP_ANGLE",
+            "type" : "text"
+         }
+      },
+      "label" : "REFERENCE VALUE DEFINITION",
+      "type" : "fieldset"
+   },
+   "bogus" : {
+      "label" : "bogus",
+      "type" : "bogus"
+   },
+   "button" : {
+      "label" : "button",
+      "type" : "button"
+   },
+   "checkbox" : {
+      "label" : "checkbox",
+      "type" : "checkbox"
+   },
+   "checklist" : {
+      "label" : "checklist",
+      "options" : {
+         "first" : {
+            "label" : "first option"
+         },
+         "second" : {
+            "isOff" : "off",
+            "isOn" : "on",
+            "label" : "second option"
+         }
+      },
+      "type" : "checklist"
+   },
+   "color" : {
+      "label" : "color",
+      "type" : "color"
+   },
+   "file" : {
+      "label" : "file",
+      "multiple" : true,
+      "type" : "file"
+   },
+   "hidden" : {
+      "label" : "hidden",
+      "type" : "hidden",
+      "val" : "hidden"
+   },
+   "image" : {
+      "label" : "image",
+      "source" : "http://angularjs.org/img/AngularJS-large.png",
+      "type" : "image"
+   },
+   "legend" : {
+      "label" : "legend",
+      "type" : "legend"
+   },
+   "radio" : {
+      "label" : "radio",
+      "type" : "radio",
+      "values" : {
+         "fifth" : "fifth option",
+         "first" : "first option",
+         "fourth" : "fourth option",
+         "second" : "second option",
+         "third" : "third option"
+      }
+   },
+   "range" : {
+      "label" : "range",
+      "maxValue" : 84,
+      "minValue" : -42,
+      "model" : "number",
+      "type" : "range",
+      "val" : 42
+   },
+   "reset" : {
+      "label" : "reset",
+      "type" : "reset"
+   },
+   "select" : {
+      "empty" : "nothing selected",
+      "label" : "select",
+      "options" : {
+         "eighth" : {
+            "group" : "first group",
+            "label" : "eighth option"
+         },
+         "fifth" : {
+            "label" : "fifth option"
+         },
+         "first" : {
+            "label" : "first option"
+         },
+         "fourth" : {
+            "group" : "first group",
+            "label" : "fourth option"
+         },
+         "ninth" : {
+            "group" : "second group",
+            "label" : "ninth option"
+         },
+         "second" : {
+            "group" : "first group",
+            "label" : "second option"
+         },
+         "seventh" : {
+            "label" : "seventh option"
+         },
+         "sixth" : {
+            "group" : "second group",
+            "label" : "sixth option"
+         },
+         "tenth" : {
+            "label" : "tenth option"
+         },
+         "third" : {
+            "group" : "second group",
+            "label" : "third option"
+         }
+      },
+      "type" : "select"
+   },
+   "submit" : {
+      "label" : "submit",
+      "type" : "submit"
+   }
+}

@@ -9,3 +9,8 @@ bookstore-example-with-mvc-webflow/.classpath
 bookstore-example-with-mvc-webflow/.project
 bookstore-example-with-mvc-webflow/target
 bookstore-example-with-mvc-webflow/bookstore.log
+
+bookstore-spring-boot/.settings
+bookstore-spring-boot/.classpath
+bookstore-spring-boot/.project
+bookstore-spring-boot/target

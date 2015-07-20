@@ -1,0 +1,36 @@
+<!-- <div class="container"> -->
+	<!-- <do-cfd-header-bar selected="plan"></do-cfd-header-bar> -->
+	
+<!--     <h1>The plan Page</h1> -->
+		
+		<!-- 
+<a ui-sref=".initialPlan" class="btn btn-primary">Initial Plan</a>
+		<a ui-sref=".configuration" class="btn btn-primary">Configuration</a>
+ -->
+    <div class="container FullWidth" ng-controller="masterDataCtrl">  
+ 
+  	  <div class="help-block alert alert-success" ng-show="isDataSaved" id="divSuccess">
+  	  		<a href="#" class="close" data-dismiss="alert">&times;</a>
+			<strong>Success!&nbsp;</strong>{{successMsg}}
+	  </div>
+	  <div class="alert alert-danger" ng-show="isError" id="divError">
+  	  		<a href="#" class="close" data-dismiss="alert">&times;</a>
+			<strong>Error!&nbsp;</strong>{{errorMsg}} 
+	  </div>
+  	  <div class="row col-md-12">
+		  <div class="col-md-3">
+				<ul class="nav">
+					<li><a ui-sref-active="active-sidebar" ui-sref="bookecom.listBooks">List Books</a></li>
+					<li><a ui-sref-active="active-sidebar" ui-sref="bookecom.checkout">Checkout</a></li>
+					
+				</ul>
+		  </div>
+		  <div class="col-md-9">
+				<div ui-view></div>
+		  </div>
+		  <div class="col-md-3">
+			<!--div>Right Sidebar</div-->
+		  </div>
+      </div>   
+	</div>
+
