@@ -1,5 +1,5 @@
 <div ng-controller="listFormDataCtrl">
-<legend class="noBold fontLegend col-md-12">List Forms</legend>
+<legend class="noBold fontLegend col-md-12">List Forms: {{ messages.formName }}</legend>
     <div class="row col-md-9">
         <div class="panel panel-default">
             <div class="panel-body">
@@ -22,7 +22,7 @@
                  <th></th>
             </thead>
             <tbody>
-                <tr ng-repeat="message in messages | filter:query">
+                <tr ng-repeat="message in messages.formList | filter:query">
                     <td><a ui-sref="formbuilder.renderFormData( {formid: '{{formid}}', dataid: '{{message.id}}' } )">{{message.name}}</a></td>
                     <td class="text-center">
                         <a href=""><span class="glyphicon glyphicon-remove" ng-click="deleteAttribute(message.id)" style="color:red"></span></a>

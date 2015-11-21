@@ -1,8 +1,11 @@
 package com.formbuilder;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import lombok.val;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +30,12 @@ public class DynamicController {
 	private FormInformationService formTemplatesService;
 
 	@RequestMapping("/getDataList/{formName}")
-	public List<ListInformation> getDataList(@PathVariable("formName") String formName) throws Exception {
-		return formTemplatesService.findAllDataByNames(formName);
+	public Map<String, Object> getDataList(@PathVariable("formName") String formName) throws Exception {
+		val map = new LinkedHashMap();
+		map.put("formList", formTemplatesService.findAllDataByNames(formName));
+		val form = formTemplatesService.findTemplateByName(formName);
+		map.put("formName", form.getRootnode().getLabel());
+		return map;
 	}
 
 	@RequestMapping("/getTemplateList")
