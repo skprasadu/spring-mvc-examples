@@ -28,8 +28,8 @@
 						<td><a ui-sref="formbuilder.renderDesignOfForms( { dataid: '0' })">Create</a></td>					
 	                </tr>
 	                <tr ng-repeat="menuEntry in menuEntries | filter:query">
-						<td>{{menuEntry}}: </td>
-						<td><a ui-sref="formbuilder.listFormData( {formid: '{{menuEntry}}' } )">List</a></td> 
+						<td>{{menuEntry.name}}: </td>
+						<td><a ui-sref="formbuilder.listFormData( {formid: '{{menuEntry.id}}' } )">List</a></td> 
 						<td>|</td> 
 						<td><a ui-sref="formbuilder.renderFormData( {formid: '{{menuEntry}}', dataid: '0' })">Create</a></td>					
 					</tr>

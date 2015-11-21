@@ -126,7 +126,6 @@ public class Utils {
 	}
 
 	private static void addAdditionalRules(Node node, Map<String, Object> map, String id) {
-		// TODO Add rules for various datatypes
 		switch (node.getDatatype()) {
 		case "number":
 			map.put("minValue", node.getLowerbound());

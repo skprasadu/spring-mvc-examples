@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.formbuilder.dao.FormInformation;
+import com.formbuilder.dao.ListInformation;
 
 @RestController
 @EnableAutoConfiguration
@@ -26,12 +27,12 @@ public class DynamicController {
 	private FormInformationService formTemplatesService;
 
 	@RequestMapping("/getDataList/{formName}")
-	public List<FormInformation> getDataList(@PathVariable("formName") String formName) throws Exception {
+	public List<ListInformation> getDataList(@PathVariable("formName") String formName) throws Exception {
 		return formTemplatesService.findAllDataByNames(formName);
 	}
 
 	@RequestMapping("/getTemplateList")
-	public List<String> getTemplateList() throws Exception {
+	public List<ListInformation> getTemplateList() throws Exception {
 		return formTemplatesService.findAllFormTemplates();
 	}
 

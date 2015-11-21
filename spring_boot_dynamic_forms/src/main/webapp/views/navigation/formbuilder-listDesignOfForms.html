@@ -23,7 +23,7 @@
             </thead>
             <tbody>
                 <tr ng-repeat="message in messages | filter:query">
-                    <td><a ui-sref="formbuilder.renderDesignOfForms( { formid: '{{message}}' } )">{{message}}</a></td>
+                    <td><a ui-sref="formbuilder.renderDesignOfForms( { formid: '{{message.id}}' } )">{{message.name}}</a></td>
                     <td class="text-center">
                         <a href=""><span class="glyphicon glyphicon-remove" ng-click="deleteDesignOfForms(message.id)" style="color:red"></span></a>
                     </td>

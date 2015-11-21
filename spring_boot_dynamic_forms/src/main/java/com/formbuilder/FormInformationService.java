@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.formbuilder.dao.FormInformation;
+import com.formbuilder.dao.ListInformation;
 
 @Service
 public class FormInformationService {
@@ -29,8 +30,10 @@ public class FormInformationService {
 		repository.deleteAll();
 	}
 
-	public List<String> findAllFormTemplates() throws Exception {
-		return repository.findAllFormTemplates().map(x -> x.getRootnode().getId()).collect(Collectors.toList());
+	public List<ListInformation> findAllFormTemplates() throws Exception {
+		return repository.findAllFormTemplates()
+				.map(x -> ListInformation.builder().id(x.getRootnode().getId()).name(x.getRootnode().getLabel()).build())
+				.collect(Collectors.toList());
 	}
 
 	public void save(FormInformation formTemplate) {
@@ -44,12 +47,12 @@ public class FormInformationService {
 
 	public void save(JSONObject input, String formName, String dataId) {
 		val formTemplate = dataId.equals("0") ? findTemplateByName(formName) : repository.findFormData(formName, dataId);
-		
-		if(dataId.equals("0")){
+
+		if (dataId.equals("0")) {
 			formTemplate.setId(null);
 			formTemplate.setType("data");
 		}
-		//combine formTemplate and input
+		// combine formTemplate and input
 		Utils.combineFormDataAndInput(formTemplate, input);
 		repository.save(formTemplate);
 	}
@@ -59,7 +62,9 @@ public class FormInformationService {
 		return Utils.convertAttributeToUi(root);
 	}
 
-	public List<FormInformation> findAllDataByNames(String formName) {
-		return repository.findAllFormData(formName).collect(Collectors.toList());
+	public List<ListInformation> findAllDataByNames(String formName) {
+		return repository.findAllFormData(formName)
+				.map(x -> ListInformation.builder().id(x.getId()).name(x.getRootnode().getLabel()).build())
+				.collect(Collectors.toList());
 	}
 }
