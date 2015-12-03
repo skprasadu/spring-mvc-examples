@@ -28,8 +28,6 @@ public class FormsTemplateServiceTest {
 	@Test
 	public void findAllTemplates() throws Exception {
 		List<ListInformation> list = formsService.findAllFormTemplates();
-		assertEquals(1, list.size());
-
-		assertEquals("Authority", list.get(0).getName());
+		assertEquals(7, list.size());
 	}
 }

@@ -3,7 +3,7 @@ package com.formbuilder.sqlemit;
 
 public class CrudSqlEmitter extends SqlEmitter {
 
-	public String emit(String tableName, String[] column, String[] relationship, int orderBy) {
+	public String emit(String appName, String tableName, String[] column, String[] relationship, int orderBy) {
 
 		// Create Script
 		StringBuffer sb = new StringBuffer(String.format(openCreate, tableName) + System.lineSeparator());
@@ -36,13 +36,13 @@ public class CrudSqlEmitter extends SqlEmitter {
 		}
 
 		// Insert Script
-		insertUiForm(sb, tableName, nameColumn, orderBy);
+		insertUiForm(sb, tableName, nameColumn, orderBy, "Form");
 		if (relationship != null) {
 			for (String rel : relationship) {
 				String[] st = rel.split(":");
 				String relName = st.length == 1 ? st[0] : st[1];
 				String logicalName = st.length == 2 ? st[1] : "";
-				insertUiFormLink(sb, tableName, relName, logicalName);
+				insertUiFormLink(sb, tableName, relName, logicalName, true);
 			}
 		}
 		return sb.toString();

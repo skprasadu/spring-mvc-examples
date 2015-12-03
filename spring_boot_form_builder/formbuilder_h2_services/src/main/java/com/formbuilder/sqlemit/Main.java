@@ -11,7 +11,6 @@ import java.util.Properties;
 //import org.apache.log4j.Logger;
 
 public class Main {
-
 	//private static Logger logger = Logger.getLogger(Main.class);
 	public static Map<String, Integer> tableNameLookup = new LinkedHashMap<String, Integer>();
 
@@ -24,6 +23,10 @@ public class Main {
 		int i = 1;
 		for (Enumeration e = prop.keys(); e.hasMoreElements();) {
 			String key = (String) e.nextElement();
+			String []appSplit = key.split("\\.");
+			if(i == 1){
+				sb.append(Util.createGenericTables(appSplit[0]));
+			}
 			String sVal = prop.getProperty(key);
 
 			System.out.println("sVal=" + sVal);
@@ -34,10 +37,11 @@ public class Main {
 			
 			//assertNotNull(emitter);
 
-			sb.append(emitter.emit(key, split[1].split(","), split.length == 2 ? null : split[2].split(","), i));
+			sb.append(emitter.emit(appSplit[0], appSplit[1], split[1].split(","), split.length == 2 ? null : split[2].split(","), i));
 			i++;
 		}
 		
 		System.out.println("Script:" + sb.toString());
 	}
+
 }

@@ -3,7 +3,7 @@ package com.formbuilder.sqlemit;
 public class RuleSqlEmitter extends SqlEmitter {
 	
 	@Override
-	public String emit(String tableName, String[] column, String[] relationship, int orderBy) {
+	public String emit(String appName, String tableName, String[] column, String[] relationship, int orderBy) {
 		StringBuffer sb = new StringBuffer(String.format(openCreate, tableName) + System.lineSeparator());
 		String nameColumn = "name";
 		for (String col : column) {
@@ -30,12 +30,12 @@ public class RuleSqlEmitter extends SqlEmitter {
 		sb.append(closeCreate + System.lineSeparator());
 		
 		//Insert Script
-		insertUiForm(sb, tableName, nameColumn, orderBy);
+		insertUiForm(sb, tableName, nameColumn, orderBy, "Rule");
 		for (String rel : relationship) {
 			String[] st = rel.split(":");
 			String relName = st.length == 1 ? st[0] : st[1];
 			String logicalName = st.length == 2 ? st[1] : "";
-			insertUiFormLink(sb, tableName, relName, logicalName);
+			insertUiFormLink(sb, tableName, relName, logicalName, false);
 		}
 		
 		return sb.toString();
