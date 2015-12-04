@@ -11,7 +11,7 @@ public abstract class SqlEmitter {
 	protected String insertUiFormStr = "insert into Ui_Form values(%s, %s, %s, %s, %s, %s, %s );" + System.lineSeparator();
 	protected String insertUiFormLinkStr = "insert into Ui_Form_Link values(%s, %s, %s, %b);" + System.lineSeparator();
 
-	public abstract String emit(String appName, String tableName, String[] column, String[] relationship, int orderBy);
+	public abstract void emit(String appName, String tableName, String[] column, String[] relationship, int orderBy, StringBuffer ddlScripts, StringBuffer dmlScripts);
 	
 	protected void setVal(StringBuffer sb, String name) {
 		if (name.contains("id")) {

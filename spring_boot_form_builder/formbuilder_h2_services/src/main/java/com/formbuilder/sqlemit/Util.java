@@ -9,13 +9,11 @@ public class Util {
 	private static final String uiFormLinkTable = "CREATE TABLE ui_form_link( ui_form_id integer Not Null, ui_form_link_id integer, link_name Varchar(50), single_select boolean);";
 	private static final String uiRuleTable = "CREATE TABLE ui_rule ( ui_form_id integer Not null, clause Varchar(500));";
 
-	static String createGenericTables(String appName) {
-		StringBuffer sb = new StringBuffer(appTable + System.lineSeparator() + uiFormTable + System.lineSeparator() + uiFormLinkTable
+	static void createGenericTables(String appName, StringBuffer ddlScripts, StringBuffer dmlScripts) {
+		ddlScripts.append(appTable + System.lineSeparator() + uiFormTable + System.lineSeparator() + uiFormLinkTable
 				+ System.lineSeparator() + uiRuleTable + System.lineSeparator());
 
-		sb.append(String.format(appTableInsert, appName, getDisplayName(appName).trim()) + System.lineSeparator());
-
-		return sb.toString();
+		dmlScripts.append(String.format(appTableInsert, appName, getDisplayName(appName).trim()) + System.lineSeparator());
 	}
 
 	public static String getDisplayName(String name) {

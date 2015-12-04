@@ -27,11 +27,16 @@
 						<td>|</td> 
 						<td><a ui-sref="formbuilder.renderDesignOfForms( { dataid: '0' })">Create</a></td>					
 	                </tr>
-	                <tr ng-repeat="menuEntry in menuEntries | filter:query">
-						<td>{{menuEntry.name}}: </td>
-						<td><a ui-sref="formbuilder.listFormData( {formid: '{{menuEntry.id}}' } )">List</a></td> 
+	            </tbody>
+	        </table>
+	        <table class="table table-hover table-striped table-condensed">
+	            <tbody ng-repeat="menuEntry in menuEntries | filter:query">
+	            	<tr><td><span style="font-weight:bold">{{menuEntry.group}}</span></td></tr>
+	                <tr ng:repeat="menuEntryList in menuEntry.tableList">
+						<td>{{menuEntryList.displayName}}: </td>
+						<td><a ui-sref="cgaas.listAttributes( {formid: '{{menuEntryList.id}}' } )">List</a></td> 
 						<td>|</td> 
-						<td><a ui-sref="formbuilder.renderFormData( {formid: '{{menuEntry}}', dataid: '0' })">Create</a></td>					
+						<td><a ui-sref="cgaas.renderAttributes( {formid: '{{menuEntryList.id}}', dataid: '0' })">Create</a></td>					
 					</tr>
 	            </tbody>
 	        </table>

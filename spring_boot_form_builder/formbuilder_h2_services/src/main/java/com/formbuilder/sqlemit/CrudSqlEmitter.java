@@ -3,10 +3,10 @@ package com.formbuilder.sqlemit;
 
 public class CrudSqlEmitter extends SqlEmitter {
 
-	public String emit(String appName, String tableName, String[] column, String[] relationship, int orderBy) {
+	public void emit(String appName, String tableName, String[] column, String[] relationship, int orderBy, StringBuffer ddlScripts, StringBuffer dmlScripts) {
 
 		// Create Script
-		StringBuffer sb = new StringBuffer(String.format(openCreate, tableName) + System.lineSeparator());
+		ddlScripts.append(String.format(openCreate, tableName) + System.lineSeparator());
 		String nameColumn = "name";
 		int i = 0;
 		for (String col : column) {
@@ -15,14 +15,14 @@ public class CrudSqlEmitter extends SqlEmitter {
 				nameColumn = st[1];
 			}
 
-			setVal(sb, st[0]);
+			setVal(ddlScripts, st[0]);
 			if (i != column.length - 1) {
-				sb.append(",");
+				ddlScripts.append(",");
 			}
-			sb.append(System.lineSeparator());
+			ddlScripts.append(System.lineSeparator());
 			i++;
 		}
-		sb.append(closeCreate + System.lineSeparator());
+		ddlScripts.append(closeCreate + System.lineSeparator());
 		if (relationship != null) {
 			for (String rel : relationship) {
 				String[] st = rel.split(":");
@@ -31,20 +31,19 @@ public class CrudSqlEmitter extends SqlEmitter {
 				sb1.append(String.format(relIdColumn, tableName) + "," + System.lineSeparator());
 				sb1.append(String.format(relIdColumn, relName) + System.lineSeparator());
 				sb1.append(closeCreate + System.lineSeparator());
-				sb.append(sb1.toString());
+				ddlScripts.append(sb1.toString());
 			}
 		}
 
 		// Insert Script
-		insertUiForm(sb, tableName, nameColumn, orderBy, "Form");
+		insertUiForm(dmlScripts, tableName, nameColumn, orderBy, "Form");
 		if (relationship != null) {
 			for (String rel : relationship) {
 				String[] st = rel.split(":");
 				String relName = st.length == 1 ? st[0] : st[1];
 				String logicalName = st.length == 2 ? st[1] : "";
-				insertUiFormLink(sb, tableName, relName, logicalName, true);
+				insertUiFormLink(ddlScripts, tableName, relName, logicalName, true);
 			}
 		}
-		return sb.toString();
 	}
 }

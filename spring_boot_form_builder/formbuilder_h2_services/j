@@ -1,73 +1,31 @@
 Hello
-sVal=Rule#citizenship_date#team_member,country:citizen
-sVal=Crud#name,emp_code
-sVal=Crud#name,country_code#
-sVal=Crud#name:sow_code,description#
-sVal=Crud#name:project_code,project_type,start_date#supplier,sow
-sVal=Rule#citizenship_date#project,supplier,country:citizen
-sVal=Crud#name,supp_code#country:location
-Script:CREATE TABLE ui_app (ui_app_id integer Not null, name Varchar(50), display_name Varchar(50));
+sVal=Rule##sow_activity,program,product,item,country:location,country:incorporation_country
+sVal=Rule##product,sow_activity,cont_type,item,program,jcdpd,info_class_type
+Create Script:CREATE TABLE ui_app (ui_app_id integer Not null, name Varchar(50), display_name Varchar(50));
 CREATE TABLE ui_form( id integer Not Null, form_table_name Varchar(100), order_by integer, display_name Varchar(100), name_column_display_name Varchar(50), group_by Varchar(30), ui_app_id integer);
 CREATE TABLE ui_form_link( ui_form_id integer Not Null, ui_form_link_id integer, link_name Varchar(50), single_select boolean);
 CREATE TABLE ui_rule ( ui_form_id integer Not null, clause Varchar(500));
-insert into ui_app values (1, 'vendor_management', 'Vendor Management');
-CREATE Table citizenship_rule_lookup (id as Integer,
-citizenship_date Date,
-team_member_id integer,
-citizen_id integer
+CREATE Table supplier_rule_lookup (id Integer,
+ Varchar(50),
+sow_activity_id integer,
+program_id integer,
+product_id integer,
+item_id integer,
+location__country_id integer,
+incorporation_country__country_id integer
 );
-insert into Ui_Form values(1, 'citizenship_rule_lookup', 1, 'Citizenship Rule Lookup', '', 'Rule', 1 );
-insert into Ui_Form_Link values(1, 2, '', false);
-insert into Ui_Form_Link values(1, 3, 'citizen', false);
-CREATE Table team_member (id as Integer,
-name Varchar(50),
-emp_code Varchar(50)
+CREATE Table info_asset_rule_lookup (id Integer,
+ Varchar(50),
+product_id integer,
+sow_activity_id integer,
+cont_type_id integer,
+item_id integer,
+program_id integer,
+jcdpd_id integer,
+info_class_type_id integer
 );
-insert into Ui_Form values(2, 'team_member', 2, 'Team Member', '', 'Form', 1 );
-CREATE Table country (id as Integer,
-name Varchar(50),
-country_code Varchar(50)
-);
-insert into Ui_Form values(4, 'country', 3, 'Country', '', 'Form', 1 );
-CREATE Table sow (id as Integer,
-name Varchar(50),
-description Varchar(50)
-);
-insert into Ui_Form values(5, 'sow', 4, 'Sow', '', 'Form', 1 );
-CREATE Table project (id as Integer,
-name Varchar(50),
-project_type Varchar(50),
-start_date Date
-);
-CREATE Table project_supplier_relationship (
-project_id integer,
-supplier_id integer
-);
-CREATE Table project_sow_relationship (
-project_id integer,
-sow_id integer
-);
-insert into Ui_Form values(6, 'project', 5, 'Project', '', 'Form', 1 );
-insert into Ui_Form_Link values(6, 7, '', true);
-insert into Ui_Form_Link values(6, 5, '', true);
-CREATE Table project_rule_lookup (id as Integer,
-citizenship_date Date,
-project_id integer,
-supplier_id integer,
-citizen_id integer
-);
-insert into Ui_Form values(8, 'project_rule_lookup', 6, 'Project Rule Lookup', '', 'Rule', 1 );
-insert into Ui_Form_Link values(8, 6, '', false);
-insert into Ui_Form_Link values(8, 7, '', false);
-insert into Ui_Form_Link values(8, 3, 'citizen', false);
-CREATE Table supplier (id as Integer,
-name Varchar(50),
-supp_code Varchar(50)
-);
-CREATE Table supplier_location_relationship (
-supplier_id integer,
-location_id integer
-);
-insert into Ui_Form values(7, 'supplier', 7, 'Supplier', '', 'Form', 1 );
-insert into Ui_Form_Link values(7, 9, 'location', true);
+
+Insert Script:insert into ui_app values (1, 'auth_admin', 'Auth Admin');
+insert into Ui_Form values(1, 'supplier_rule_lookup', 1, 'Supplier Rule Lookup', '', 'Rule', 1 );
+insert into Ui_Form values(2, 'info_asset_rule_lookup', 2, 'Info Asset Rule Lookup', '', 'Rule', 1 );
 

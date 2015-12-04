@@ -19,13 +19,14 @@ public class Main {
 
 		Properties prop = new Properties();
 		prop.load(new FileInputStream(args[0]));
-		StringBuffer sb = new StringBuffer();
+		StringBuffer ddlScripts = new StringBuffer();
+		StringBuffer dmlScripts = new StringBuffer();
 		int i = 1;
 		for (Enumeration e = prop.keys(); e.hasMoreElements();) {
 			String key = (String) e.nextElement();
 			String []appSplit = key.split("\\.");
 			if(i == 1){
-				sb.append(Util.createGenericTables(appSplit[0]));
+				Util.createGenericTables(appSplit[0], ddlScripts, dmlScripts );
 			}
 			String sVal = prop.getProperty(key);
 
@@ -37,11 +38,12 @@ public class Main {
 			
 			//assertNotNull(emitter);
 
-			sb.append(emitter.emit(appSplit[0], appSplit[1], split[1].split(","), split.length == 2 ? null : split[2].split(","), i));
+			emitter.emit(appSplit[0], appSplit[1], split[1].split(","), split.length == 2 ? null : split[2].split(","), i, ddlScripts, dmlScripts);
 			i++;
 		}
 		
-		System.out.println("Script:" + sb.toString());
+		System.out.println("Create Script:" + ddlScripts.toString());
+		System.out.println("Insert Script:" + dmlScripts.toString());
 	}
 
 }

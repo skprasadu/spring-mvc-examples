@@ -16,7 +16,7 @@ angular.module('appDynApp')
         });
         
         $scope.isDisabled = true;
-        $http.get('./enableDesigner').success(function (data, status, headers, config) {
+        $http.get('./disableDesigner').success(function (data, status, headers, config) {
         	$scope.isDisabled = data;
         });
     }]);
