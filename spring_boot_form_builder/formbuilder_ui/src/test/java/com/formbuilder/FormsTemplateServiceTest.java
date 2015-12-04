@@ -1,17 +1,18 @@
 package com.formbuilder;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import com.formbuilder.dao.ListInformation;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
@@ -27,7 +28,7 @@ public class FormsTemplateServiceTest {
 	
 	@Test
 	public void findAllTemplates() throws Exception {
-		List<ListInformation> list = formsService.findAllFormTemplates();
-		assertEquals(7, list.size());
+		List<Map> list = formsService.findAllFormTemplates("");
+		assertEquals(2, list.size());
 	}
 }

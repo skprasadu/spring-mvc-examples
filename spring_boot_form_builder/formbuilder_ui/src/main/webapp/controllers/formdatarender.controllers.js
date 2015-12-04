@@ -2,9 +2,7 @@
 
 angular.module('appDynApp')
 
-    .controller('renderFormDataCtrl', ['$http', '$scope', '$location', function ($http, $scope, $location) {
-    	
-    
+    .controller('renderAttributesCtrl', ['$http', '$scope', '$location','$window', function ($http, $scope, $location,$window) {
     	
 		if($location.search().formid != undefined){
 		    //alert($location.search().formid);
@@ -13,17 +11,31 @@ angular.module('appDynApp')
 		if($location.search().dataid != undefined){
 			$scope.dataid = $location.search().dataid;
 		}
+		if($location.search().app_name != undefined){
+			$scope.app_name = $location.search().app_name;
+		}
     	
         $scope.urlFormData = {};         // JavaScript needs an object to put our form's models into.
-        
+            	
         $scope.processForm = function () {
-                $http.post( "/saveForm?formid="+$location.search().formid+"&dataid="+$location.search().dataid,$scope.urlFormData)
+                $http.post( './saveForm?app_name=' +$scope.app_name + '&formid=' + $scope.formid+"&dataid="+$scope.dataid,$scope.urlFormData)
                 .success(function (data, status, headers, config) {
-                			
+                
+            		if(data.success == true){
                 			alert("Database updated successfully!!!");
+                			$window.location.reload();
+            		} else {
+            			var filteredData = data.outcomeList.filter(function (value) { 
+            				return value.outcome != 'success';
+            			}).map(function (value) { 
+            				return value.errorDetails;
+            			});
+            			
+            			alert("Failed to save the data!, errorDetails=" + JSON.stringify(filteredData));
+            		}
                 })
-                .error(function(data, status, headers, config){
-                	       alert("Failed to save the data!!!");
+                .error(function(data, status, headers, config, statusText){
+                	       alert("Failed to save the data!, returned status" + status + " data =" + JSON.stringify(data));
                 }
                 );
         };        

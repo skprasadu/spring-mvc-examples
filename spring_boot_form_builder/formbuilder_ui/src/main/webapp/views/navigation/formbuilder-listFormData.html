@@ -1,5 +1,5 @@
-<div ng-controller="listFormDataCtrl">
-<legend class="noBold fontLegend col-md-12">List Forms: {{ messages.formName }}</legend>
+<div ng-controller="listAttributesCtrl">
+<legend class="noBold fontLegend col-md-12">List Forms: {{messages.formName}}</legend>
     <div class="row col-md-9">
         <div class="panel panel-default">
             <div class="panel-body">
@@ -18,12 +18,22 @@
     <div class="row col-md-9">
         <table class="table table-hover table-striped table-condensed">
             <thead>
-                <th>Name</th>
-                 <th></th>
-            </thead>
+            	<tr>
+			        <th ng-repeat="(header, value) in messages.formList[0]">
+			          {{header}}
+			        </th>
+			        <th>
+			        </th>
+			        <th>
+			        </th>
+		        </tr>
+        	</thead>
             <tbody>
                 <tr ng-repeat="message in messages.formList | filter:query">
-                    <td><a ui-sref="formbuilder.renderFormData( {formid: '{{formid}}', dataid: '{{message.id}}' } )">{{message.name}}</a></td>
+                	<td ng-repeat="cell in message">
+          				{{cell}}
+        			</td>
+                    <td><a ui-sref="formbuilder.renderAttributes( {app_name: '{{app_name}}', formid: '{{formid}}', dataid: '{{message.id}}' } )">Edit</a></td>
                     <td class="text-center">
                         <a href=""><span class="glyphicon glyphicon-remove" ng-click="deleteAttribute(message.id)" style="color:red"></span></a>
                     </td>

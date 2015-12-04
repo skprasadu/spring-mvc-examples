@@ -1,12 +1,12 @@
 'use strict';
 
-angular.module('appDynApp', ['ui.router', 'ngSanitize', 'ngTagsInput', 'ui.bootstrap', 'angularTreeview', 'dynform', 'ngGrid'])
+angular.module('appDynApp', ['ui.router', 'ngSanitize', 'ui.bootstrap', 'ngTagsInput', 'angularTreeview', 'dynform', 'ngGrid'])
 
 	.config(['$stateProvider','$urlRouterProvider',
 	function($stateProvider, $urlRouterProvider) {
 	
 		$urlRouterProvider.otherwise('/formbuilder');
-		$urlRouterProvider.when('/formbuilder', '/formbuilder/listDesignOfForms');
+		$urlRouterProvider.when('/formbuilder', '/formbuilder/listAttributes');
 		
         $stateProvider
             
@@ -15,24 +15,14 @@ angular.module('appDynApp', ['ui.router', 'ngSanitize', 'ngTagsInput', 'ui.boots
 				controller:'masterDataCtrl',
 				templateUrl:'views/navigation/formbuilder.html'                            
             })
-			.state('formbuilder.listDesignOfForms', {
-				url: '/listDesignOfForms',
-				controller:'listDesignOfFormsCtrl',
-				templateUrl: 'views/navigation/formbuilder-listDesignOfForms.html'
-			})
-			.state('formbuilder.renderDesignOfForms', {
-				url: '/renderDesignOfForms?formid',
-				controller:'listDesignOfFormCreateCtrl',
-				templateUrl: 'views/navigation/formbuilder-designOfFormsCreate.html'
-			})
-			.state('formbuilder.listFormData', {
-				url: '/listFormData?formid',
-				controller:'listFormDataCtrl',
+			.state('formbuilder.listAttributes', {
+				url: '/listAttributes?app_name&formid',
+				controller:'listAttributesCtrl',
 				templateUrl: 'views/navigation/formbuilder-listFormData.html'
 			})
-			.state('formbuilder.renderFormData', {
-				url: '/renderFormData?formid&dataid',
-				controller:'renderFormDataCtrl',
+			.state('formbuilder.renderAttributes', {
+				url: '/renderAttributes?app_name&formid&dataid',
+				controller:'renderAttributesCtrl',
 				templateUrl: 'views/navigation/formbuilder-renderFormData.html'
-			})
+			})			
     }]);

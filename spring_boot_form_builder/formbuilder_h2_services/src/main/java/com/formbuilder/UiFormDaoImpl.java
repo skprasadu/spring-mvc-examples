@@ -23,8 +23,10 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import com.formbuilder.dto.ColumnDTO;
@@ -49,7 +51,7 @@ public class UiFormDaoImpl implements UiFormDao {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.formbuilder.dao.UiFormDao#getFormList()
+	 * @see com.boeing.cgaas.dao.UiFormDao#getFormList()
 	 */
 	@Override
 	public List<UiForm> getFormList(String appName) {
@@ -60,8 +62,8 @@ public class UiFormDaoImpl implements UiFormDao {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.formbuilder.dao.UiFormDao#getFormData(int,
-	 * com.formbuilder.dto.UiForm, java.util.List)
+	 * @see com.boeing.cgaas.dao.UiFormDao#getFormData(int,
+	 * com.boeing.cgaas.dto.UiForm, java.util.List)
 	 */
 	@Override
 	public Map getFormData(String appName, int dataId, UiForm form, List<UiFormLink> formLinks) throws SQLException {
@@ -90,7 +92,7 @@ public class UiFormDaoImpl implements UiFormDao {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.formbuilder.dao.UiFormDao#getFormInfo(int)
+	 * @see com.boeing.cgaas.dao.UiFormDao#getFormInfo(int)
 	 */
 	@Override
 	public UiForm getFormInfo(String appName, int formId) {
@@ -101,7 +103,7 @@ public class UiFormDaoImpl implements UiFormDao {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.formbuilder.dao.UiFormDao#getFormLinkInfo(int)
+	 * @see com.boeing.cgaas.dao.UiFormDao#getFormLinkInfo(int)
 	 */
 	@Override
 	public List<UiFormLink> getFormLinkInfo(String appName, int formId) {
@@ -344,7 +346,7 @@ public class UiFormDaoImpl implements UiFormDao {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.formbuilder.dao.UiFormDao#getFormDataList(int)
+	 * @see com.boeing.cgaas.dao.UiFormDao#getFormDataList(int)
 	 */
 	@Override
 	public List<Map> getFormDataList(String appName, int formId) {
@@ -377,7 +379,7 @@ public class UiFormDaoImpl implements UiFormDao {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.formbuilder.dao.UiFormDao#saveFormData(int,
+	 * @see com.boeing.cgaas.dao.UiFormDao#saveFormData(int,
 	 * org.json.simple.JSONObject)
 	 */
 	@Override
@@ -523,7 +525,9 @@ public class UiFormDaoImpl implements UiFormDao {
 		try(Connection conn = jdbcTemplate.getDataSource().getConnection()){
 			conn.setAutoCommit(false);
 			update(conn, sql, obj);
+			//rs = jdbcTemplate.update(sql, obj);
 			for (String deleteQuery : deleteQueryList) {
+				//jdbcTemplate.update(deleteQuery);
 				update(conn, deleteQuery, null);
 			}
 
@@ -532,12 +536,13 @@ public class UiFormDaoImpl implements UiFormDao {
 				String key = String.valueOf(iter.next());
 				List<Object[]> value = queryValueMap.get(key);
 				for (Object valObj[] : value) {
+					//jdbcTemplate.update(key, valObj);
 					update(conn, key, valObj);
 				}
 
 			}
 			conn.commit();
-		}
+		} 
 
 		return rs;
 
@@ -616,11 +621,74 @@ public class UiFormDaoImpl implements UiFormDao {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.formbuilder.dao.UiFormDao#validate(org.json.simple.JSONObject)
+	 * @see com.boeing.cgaas.dao.UiFormDao#validate(org.json.simple.JSONObject)
 	 */
 	@Override
 	public JSONObject validate(JSONObject input) {
-		return null;
+
+		String name = String.valueOf(input.get("LDAP Users"));
+		String asset = String.valueOf(input.get("Info Asset"));
+		String flow = String.valueOf(input.get("Authorization Flows"));
+		String flows[] = { "flow_5.4", "flow_5.5", "flow_5.6" };
+		// validate flow 5_4
+
+		List<Integer> authIds = flow5_4(name);
+		if (flow.equalsIgnoreCase("flow_5.4") && checkPermission(authIds)) {
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("result", "Permitted");
+			jsonObject.put("exception", "");
+			jsonObject.put("flow_level", "5.4");
+			return jsonObject;
+
+		} else if (checkPermission(authIds) && (flow.equalsIgnoreCase("flow_5.5") || flow.equalsIgnoreCase("flow_5.6"))) {
+
+			List<Integer> info_asset_auths = flow5_5(authIds, input);
+			if (flow.equalsIgnoreCase("flow_5.5") && checkPermission(info_asset_auths)) {
+				JSONObject jsonObject = new JSONObject();
+				jsonObject.put("result", "Permitted");
+				jsonObject.put("exception", "");
+				jsonObject.put("flow_level", "5.5");
+				return jsonObject;
+
+			} else if (checkPermission(info_asset_auths) && flow.equalsIgnoreCase("flow_5.6")) {
+
+				// flow 5.6
+				List<Integer> sow_authids = flow5_6(info_asset_auths, input);
+				if (sow_authids != null && sow_authids.size() > 0) {
+					JSONObject jsonObject = new JSONObject();
+					jsonObject.put("result", "Permitted");
+					jsonObject.put("exception", "");
+					jsonObject.put("flow_level", "5.6");
+					return jsonObject;
+				} else {
+					JSONObject jsonObject = new JSONObject();
+					jsonObject.put("result", "Permission Denied");
+					jsonObject.put("reason", "Due to no authority idenitified for the given user's SOW ");
+					jsonObject.put("exception", "");
+					jsonObject.put("flow_level", "5.6");
+					return jsonObject;
+				}
+
+			} else {
+
+				JSONObject jsonObject = new JSONObject();
+				jsonObject.put("result", "Permission Denied");
+				jsonObject.put("reason", "Due to no authority idenitified for the given info asset");
+				jsonObject.put("exception", "");
+				jsonObject.put("flow_level", "5.5");
+				return jsonObject;
+			}
+
+		} else {
+
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("result", "Permission Denied");
+			jsonObject.put("reason", "Due to no authority idenitified for the given user's supplier");
+			jsonObject.put("exception", "");
+			jsonObject.put("flow_level", "5.4");
+			return jsonObject;
+
+		}
 	}
 
 	private boolean checkPermission(List<Integer> ids) {
@@ -635,7 +703,7 @@ public class UiFormDaoImpl implements UiFormDao {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.formbuilder.dao.UiFormDao#diaplsyValidate()
+	 * @see com.boeing.cgaas.dao.UiFormDao#diaplsyValidate()
 	 */
 	@Override
 	public Map diaplsyValidate() {
@@ -714,6 +782,67 @@ public class UiFormDaoImpl implements UiFormDao {
 		return rootMap;
 	}
 
+	private List<Integer> flow5_4(String name) {
+
+		List<Integer> result = null;
+		int supplier_id = 0;
+
+		String best_code = (String) jdbcTemplate.queryForObject("select supplier_boeing_external_company from ldap_users where name=?",
+				new Object[] { name }, String.class);
+
+		if (best_code != null)
+			result = (List<Integer>) jdbcTemplate.queryForList("" + "select distinct(auth_id) from auth_supplier_relationship"
+					+ " where supplier_id=(select id from supplier where best_code=?)", new Object[] { best_code }, Integer.class);
+
+		return result;
+
+	}
+
+	public List<Integer> flow5_5(List<Integer> authIds, JSONObject input) {
+
+		String infoAsset = String.valueOf(input.get("Info Asset"));
+		String sql = String.format("select id from info_asset where  name='%s'", infoAsset.trim());
+		int info_asset_id = jdbcTemplate.queryForObject(sql, Integer.class);
+		List<Integer> info_auth_ids = null;
+		if (info_asset_id > 0) {
+			info_auth_ids = jdbcTemplate.queryForList("select distinct(auth_id) from auth_info_asset_relationship where info_asset_id=?",
+					new Object[] { new Integer(info_asset_id) }, Integer.class);
+		}
+
+		if (info_auth_ids != null && info_auth_ids.size() > 0) {
+			authIds.retainAll(info_auth_ids);
+			return authIds;
+		} else {
+			return null;
+		}
+
+	}
+
+	private List<Integer> flow5_6(List<Integer> authIds, JSONObject input) {
+
+		String ids = "";
+		for (Integer id : authIds) {
+			ids = ids + "," + id;
+
+		}
+
+		List<Integer> sow_authids = null;
+
+		List<Integer> sow_ids = jdbcTemplate.query(
+				String.format("SELECT distinct(sow_activity_id) from auth_sow_activity_relationship WHERE auth_id IN (%s)", ids.substring(1)),
+				new RowMapper<Integer>() {
+
+					public Integer mapRow(ResultSet result, int count) throws SQLException {
+						return result.getInt(1);
+
+					}
+
+				});
+
+		return sow_ids;
+
+	}
+
 	public int deleteRow(String appName, int rowId, int formId) throws SQLException {
 
 		UiForm uiform = getFormInfo(appName, formId);
@@ -721,7 +850,6 @@ public class UiFormDaoImpl implements UiFormDao {
 		List<UiFormLink> tableRelations = getFormLinkInfo(appName, formId);
 		int result = -1;
 
-		TransactionDefinition def = new DefaultTransactionDefinition(DefaultTransactionDefinition.ISOLATION_READ_UNCOMMITTED);
 		try(Connection conn = jdbcTemplate.getDataSource().getConnection()){
 			conn.setAutoCommit(false);
 			for (UiFormLink uiFormLink : tableRelations) {
@@ -731,9 +859,11 @@ public class UiFormDaoImpl implements UiFormDao {
 
 				String deleteQuery = String.format("delete from %s where %s_id=%s",
 						(uiform.getFormTableName() + "_" + relationshipName1 + "_relationship"), uiform.getFormTableName(), rowId);
+				//jdbcTemplate.update(deleteQuery);
 				update(conn, deleteQuery, null);
 			}
 
+			//result = jdbcTemplate.update(sql);
 			result=update(conn, sql, null);
 			conn.commit();
 		} 
@@ -848,4 +978,11 @@ public class UiFormDaoImpl implements UiFormDao {
 		return false;
 	}
 	/************* End rule tables display ***************/
+
+	@Override
+	public String getApplicationDisplayName(String appName) {
+		val sql = String.format("select * from ui_app where name='%s'", appName);
+		
+		return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> rs.getString("display_name") );
+	}
 }

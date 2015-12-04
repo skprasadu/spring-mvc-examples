@@ -31,4 +31,6 @@ public interface UiFormDao {
 	
 	public int deleteRow(String appName, int rowId,int formId) throws SQLException;
 
+	public abstract String getApplicationDisplayName(String appName);
+
 }

@@ -42,7 +42,7 @@ public class CrudSqlEmitter extends SqlEmitter {
 				String[] st = rel.split(":");
 				String relName = st.length == 1 ? st[0] : st[1];
 				String logicalName = st.length == 2 ? st[1] : "";
-				insertUiFormLink(ddlScripts, tableName, relName, logicalName, true);
+				insertUiFormLink(dmlScripts, tableName, relName, logicalName, true);
 			}
 		}
 	}
