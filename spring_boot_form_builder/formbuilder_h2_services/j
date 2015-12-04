@@ -5,18 +5,16 @@ Create Script:CREATE TABLE ui_app (ui_app_id integer Not null, name Varchar(50),
 CREATE TABLE ui_form( id integer Not Null, form_table_name Varchar(100), order_by integer, display_name Varchar(100), name_column_display_name Varchar(50), group_by Varchar(30), ui_app_id integer);
 CREATE TABLE ui_form_link( ui_form_id integer Not Null, ui_form_link_id integer, link_name Varchar(50), single_select boolean);
 CREATE TABLE ui_rule ( ui_form_id integer Not null, clause Varchar(500));
-CREATE Table supplier_rule_lookup (id Integer,
- Varchar(50),
-sow_activity_id integer,
+CREATE Table supplier_rule_lookup (
+sow_activity_id integer Not Null,
 program_id integer,
 product_id integer,
 item_id integer,
 location__country_id integer,
 incorporation_country__country_id integer
 );
-CREATE Table info_asset_rule_lookup (id Integer,
- Varchar(50),
-product_id integer,
+CREATE Table info_asset_rule_lookup (
+product_id integer Not Null,
 sow_activity_id integer,
 cont_type_id integer,
 item_id integer,
