@@ -16,7 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
-public class FormsTemplateServiceTest {
+public class H2FormsTemplateServiceTest {
 
 	@Autowired
 	FormInformationService formsService;

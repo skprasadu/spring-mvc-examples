@@ -6,3 +6,4 @@
 .project
 /.sonar
 .springBeans
+/target/

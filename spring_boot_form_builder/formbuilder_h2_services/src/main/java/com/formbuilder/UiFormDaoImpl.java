@@ -112,7 +112,7 @@ public class UiFormDaoImpl implements UiFormDao {
 	}
 
 	private UiForm getUiForm(ResultSet rs) throws SQLException {
-		return new UiForm(rs.getInt("id"), rs.getString("form_table_name"), rs.getString("display_name"), 
+		return new UiForm(rs.getString("id"), rs.getString("form_table_name"), rs.getString("display_name"), 
 				rs.getInt("order_by"), rs.getString("name_column_display_name"), rs.getString("group_by"));
 	}
 

@@ -5,20 +5,20 @@ import java.util.stream.Stream;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
-import com.formbuilder.dao.FormInformation;
+import com.formbuilder.dto.FormInformation;
 
 
 public interface FormInformationRepository extends CrudRepository<FormInformation, Long> {
 
-	@Query(value = "{\"type\": \"template\"}, {\"_id\":1, \"rootnode.id\" : 1, \"rootnode.label\" : 1 }")
-	Stream<FormInformation> findAllFormTemplates();
+	@Query(value = "{\"type\": \"template\", \"application\": ?0}, {\"_id\":1, \"rootnode.id\" : 1, \"rootnode.label\" : 1 }")
+	Stream<FormInformation> findAllFormTemplates(String appName);
 	
-	@Query(value = "{\"type\": \"template\", \"rootnode._id\" : ?0} }")
-	FormInformation findTemplateByName(String name);
+	@Query(value = "{\"type\": \"template\", \"application\": ?0, \"rootnode._id\" : ?1} }")
+	FormInformation findTemplateByName(String appName, String name);
 	
-	@Query(value = "{\"type\": \"data\", \"rootnode._id\" : ?0}, {\"_id\":1, \"rootnode.id\" : 1, \"rootnode.label\" : 1  }")
-	Stream<FormInformation> findAllFormData(String formName);
+	@Query(value = "{\"type\": \"data\", \"application\": ?0, \"rootnode._id\" : ?1}, {\"_id\":1, \"rootnode.id\" : 1, \"rootnode.label\" : 1  }")
+	Stream<FormInformation> findAllFormData(String appName, String formName);
 	
-	@Query(value = "{\"type\": \"data\", \"rootnode._id\" : ?0, \"_id\": ?1}, {\"_id\":1, \"rootnode.id\" : 1 }")
-	FormInformation findFormData(String formName, String id);
+	@Query(value = "{\"type\": \"data\", \"application\": ?0, \"rootnode._id\" : ?1, \"_id\": ?2}, {\"_id\":1, \"rootnode.id\" : 1 }")
+	FormInformation findFormData(String appName, String formName, String id);
 }

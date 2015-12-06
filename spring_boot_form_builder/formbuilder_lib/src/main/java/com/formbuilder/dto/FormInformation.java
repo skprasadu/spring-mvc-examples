@@ -1,4 +1,4 @@
-package com.formbuilder.dao;
+package com.formbuilder.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -15,5 +15,11 @@ public class FormInformation {
 	private String type;
 
 	@Getter @Setter
+	private String application;
+
+	@Getter @Setter
 	private Node rootnode;
+	
+	@Getter @Setter
+	private String entryType;	
 }

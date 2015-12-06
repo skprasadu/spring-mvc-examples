@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.formbuilder.dao.FormInformation;
+import com.formbuilder.dto.FormInformation;
 
 @RestController
 @EnableAutoConfiguration
@@ -36,7 +36,7 @@ public class DynamicController {
 	}
 
 	@RequestMapping(value = "/saveForm", method = RequestMethod.POST)
-	public JSONObject saveForm(@RequestBody JSONObject input, @RequestParam("app_name") String appName, @RequestParam("formid") int formId, @RequestParam("dataid") int dataId)
+	public JSONObject saveForm(@RequestBody JSONObject input, @RequestParam("app_name") String appName, @RequestParam("formid") String formId, @RequestParam("dataid") int dataId)
 			throws ParseException, SQLException {
 		return formTemplatesService.save(input, appName, formId, dataId);
 	}
@@ -59,15 +59,15 @@ public class DynamicController {
 	}
 
 	@RequestMapping("/getFormDataList/{app_name}/{form_id}")
-	public Map<String, Object> getFormDataList(@PathVariable("app_name") String appName, @PathVariable("form_id") int formId) {
+	public Map<String, Object> getFormDataList(@PathVariable("app_name") String appName, @PathVariable("form_id") String formId) {
 		
-		return formTemplatesService.findAllDataByNames(appName, String.valueOf(formId));
+		return formTemplatesService.findAllDataByNames(appName, formId);
 	}
 
 	@RequestMapping("/getFormData/{app_name}/{form_id}/{data_id}")
-	public JSONObject getFormData(@PathVariable("app_name") String appName, @PathVariable("form_id") int formId, @PathVariable("data_id") int dataId) throws SQLException {
+	public JSONObject getFormData(@PathVariable("app_name") String appName, @PathVariable("form_id") String formId, @PathVariable("data_id") int dataId) throws SQLException {
 		try {
-			return formTemplatesService.getData(appName, String.valueOf(formId), String.valueOf(dataId));
+			return formTemplatesService.getData(appName, formId, String.valueOf(dataId));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -76,16 +76,16 @@ public class DynamicController {
 	}
 
 	@RequestMapping(value = "/deleteRecord/{app_name}/{record_id}/{form_id}", method = RequestMethod.POST)
-	public int deleteRecord(@PathVariable("app_name") String appName, @PathVariable("record_id") int rowId, @PathVariable("form_id") int formId) throws SQLException {
+	public int deleteRecord(@PathVariable("app_name") String appName, @PathVariable("record_id") int rowId, @PathVariable("form_id") String formId) throws SQLException {
 		
 		formTemplatesService.deleteRecord(appName, rowId, formId);
 		return 1;
 	}
 	
 	@RequestMapping("/getDesignOfForm/{formName}")
-	public FormInformation getDesignOfForm(@PathVariable("formName") String formName) throws JsonParseException, JsonMappingException,
+	public FormInformation getDesignOfForm(@PathVariable("app_name") String appName, @PathVariable("formName") String formName) throws JsonParseException, JsonMappingException,
 			IOException {
-		return formTemplatesService.findTemplateByName(formName);
+		return formTemplatesService.findTemplateByName(appName, formName);
 	}
 
 	@RequestMapping(value = "/saveDesignOfForm", method = RequestMethod.POST)

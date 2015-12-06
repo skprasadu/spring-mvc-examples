@@ -22,5 +22,10 @@ angular.module('appDynApp')
 			 $scope.$emit('updateErrorStatus',$scope.status);
         });
         
+        $scope.isDisabled = true;
+        $http.get('./disableDesigner').success(function (data, status, headers, config) {
+        	$scope.isDisabled = data;
+        });
+        
     }]);
 	

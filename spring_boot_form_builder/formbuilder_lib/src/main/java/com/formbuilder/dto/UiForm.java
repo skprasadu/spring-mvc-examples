@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class UiForm {
-	private final int id;
+	private final String id;
 	
 	private final String formTableName;
 

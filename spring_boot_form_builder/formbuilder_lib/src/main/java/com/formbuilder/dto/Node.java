@@ -1,4 +1,4 @@
-package com.formbuilder.dao;
+package com.formbuilder.dto;
 
 import java.util.List;
 

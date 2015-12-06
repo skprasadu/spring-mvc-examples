@@ -1,4 +1,4 @@
-package com.formbuilder.dao;
+package com.formbuilder.dto;
 
 import lombok.Getter;
 import lombok.experimental.Builder;

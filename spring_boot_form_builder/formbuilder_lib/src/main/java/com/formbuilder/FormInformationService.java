@@ -9,19 +9,17 @@ import org.json.simple.JSONObject;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.formbuilder.dao.FormInformation;
+import com.formbuilder.dto.FormInformation;
 
 public interface FormInformationService {
 
-	public abstract void deleteRecord(String appName, int rowId, int formId);
+	public abstract void deleteRecord(String appName, int rowId, String formId);
 
 	public abstract List<Map> findAllFormTemplates(String appName) throws Exception;
 
-	public abstract JSONObject save(JSONObject input, String appName, int formId, int dataId);
+	public abstract JSONObject save(JSONObject input, String appName, String formId, int dataId);
 
-	public abstract FormInformation findTemplateByName(String name);
-
-	public abstract void save(JSONObject input, String formName, String dataId);
+	public abstract FormInformation findTemplateByName(String appName, String name);
 
 	public abstract JSONObject getData(String appName, String formName, String dataid) throws JsonParseException, JsonMappingException,
 			IOException;
@@ -31,5 +29,7 @@ public interface FormInformationService {
 	public abstract boolean hideDesigner();
 
 	public abstract String getApplicationDisplayName(String appName);
+
+	void deleteAll();
 
 }

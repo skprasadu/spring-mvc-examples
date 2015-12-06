@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.formbuilder.dao.FormInformation;
-import com.formbuilder.dao.Node;
+import com.formbuilder.dto.FormInformation;
+import com.formbuilder.dto.Node;
 import com.formbuilder.jdbcstream.JdbcStream;
 import com.formbuilder.jdbcstream.JdbcStream.SqlRow;
 

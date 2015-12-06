@@ -11,8 +11,8 @@ import org.json.simple.JSONObject;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.formbuilder.dao.FormInformation;
-import com.formbuilder.dao.Node;
+import com.formbuilder.dto.FormInformation;
+import com.formbuilder.dto.Node;
 
 public class Utils {
 	private static Logger logger = Logger.getLogger(Utils.class);

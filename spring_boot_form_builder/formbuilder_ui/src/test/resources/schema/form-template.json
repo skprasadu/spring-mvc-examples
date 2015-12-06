@@ -1,0 +1,59 @@
+{
+    "_class" : "com.boeing.formbuilder.dao.Root",
+    "type" : "template",
+    "rootnode" : {
+        "id" : "fuelload",
+        "datatype" : "Composite-selectsingle",
+        "label" : "Fuel Load",
+        "lowerbound" : 0,
+        "upperbound" : 0,
+        "children" : [ 
+            {
+                "id" : "text",
+                "datatype" : "text",
+                "label" : "Manjula's Entry",
+                "lowerbound" : 0,
+                "upperbound" : 0
+            }, 
+            {
+                "id" : "mcom",
+                "datatype" : "Composite-selectsingle",
+                "label" : "MCom",
+                "lowerbound" : 0,
+                "upperbound" : 0,
+                "children" : [ 
+                    {
+                        "id" : "mtext",
+                        "datatype" : "number",
+                        "label" : "MText",
+                        "lowerbound" : 10,
+                        "upperbound" : 100,
+                        "val" : "55"
+                    }, 
+                    {
+                        "id" : "mtextarea",
+                        "datatype" : "textarea",
+                        "label" : "Mtextarea",
+                        "lowerbound" : 0,
+                        "upperbound" : 0
+                    }, 
+                    {
+                        "id" : "atext",
+                        "datatype" : "text",
+                        "label" : "AText",
+                        "lowerbound" : 0,
+                        "upperbound" : 0
+                    }
+                ]
+            }, 
+            {
+                "id" : "mnum",
+                "datatype" : "number",
+                "label" : "M Number",
+                "lowerbound" : 10,
+                "upperbound" : 20,
+                "val" : "12"
+            }
+        ]
+    }
+}
