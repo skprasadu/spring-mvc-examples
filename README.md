@@ -1,10 +1,6 @@
-Spring MVC
-==========
+Spring Boot, Java 8
+===================
 
-This code base supports latest Spring 4.1.7.RELEASE version.
+There is a new [spring_boot_form_builder](https://github.com/skprasadu/spring-mvc-examples/tree/master/spring_boot_form_builder) application refer [Wiki](https://github.com/skprasadu/spring-mvc-examples/wiki) for more details. It uses the latest [Spring Boot](http://projects.spring.io/spring-boot/) and [Spring Data](http://projects.spring.io/spring-data/).
 
-In this sample, we demonstrated a simple Bookstoree application using Spring MVC, [Kickstrap](http://ajkochanowicz.github.com/Kickstrap/). It demonstrate how to build a Spring MVC application using a TDD approach.
-
-Refer to this [blog](http://krishnasblog.com/2013/02/22/junit-testing-of-spring-mvc-application-introduction/) for more details.
-
-We have implemented new [Spring Boot tutorial](https://github.com/skprasadu/spring-mvc-examples/tree/master/bookstore-spring-boot) in the same format.
+Refer to this [blog](http://krishnasblog.com/2013/02/22/junit-testing-of-spring-mvc-application-introduction/) for initial draft details. But for latest changes refer [Wiki](https://github.com/skprasadu/spring-mvc-examples/wiki).
