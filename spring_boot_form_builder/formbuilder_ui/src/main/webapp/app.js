@@ -15,6 +15,16 @@ angular.module('appDynApp', ['ui.router', 'ngSanitize', 'ui.bootstrap', 'ngTagsI
 				controller:'masterDataCtrl',
 				templateUrl:'views/navigation/formbuilder.html'                            
             })
+            .state('formbuilder.listDesignOfForms', {
+				url: '/listDesignOfForms',
+				controller:'listDesignOfFormsCtrl',
+				templateUrl: 'views/navigation/formbuilder-listDesignOfForms.html'
+			})
+			.state('formbuilder.renderDesignOfForms', {
+				url: '/renderDesignOfForms?formid',
+				controller:'listDesignOfFormCreateCtrl',
+				templateUrl: 'views/navigation/formbuilder-designOfFormsCreate.html'
+			})
 			.state('formbuilder.listAttributes', {
 				url: '/listAttributes?app_name&formid',
 				controller:'listAttributesCtrl',

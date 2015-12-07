@@ -18,6 +18,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.formbuilder.dto.FormInformation;
+import com.formbuilder.dto.RuleValidationOutcome;
 import com.formbuilder.dto.UiForm;
 import com.google.common.collect.ImmutableMap;
 
@@ -52,8 +53,8 @@ public class FormInformationServiceImpl implements FormInformationService {
 		val i = new AtomicInteger();
 		return repository
 				.findAllFormTemplates(appName)
-				.map(x -> new UiForm(x.getRootnode().getId(), x.getRootnode().getId(), x.getRootnode().getLabel(), i.incrementAndGet(), x.getRootnode().getLabel(), x
-						.getEntryType())).collect(Collectors.groupingBy(UiForm::getGroupBy)).entrySet().stream()
+				.map(x -> new UiForm(x.getRootnode().getId(), x.getRootnode().getId(), x.getRootnode().getLabel(), i.incrementAndGet(), x
+						.getRootnode().getLabel(), x.getEntryType())).collect(Collectors.groupingBy(UiForm::getGroupBy)).entrySet().stream()
 				.map(x -> ImmutableMap.of("group", x.getKey(), "tableList", x.getValue())).collect(Collectors.toList());
 	}
 
@@ -65,11 +66,19 @@ public class FormInformationServiceImpl implements FormInformationService {
 	 */
 	@Override
 	public JSONObject save(JSONObject input, String appName, String formId, int dataId) {
+		JSONObject json = new JSONObject();
 		try {
-			val om = new ObjectMapper();
-			val formTemplate = om.readValue(input.toJSONString(), FormInformation.class);
-			formTemplate.setApplication(appName);
-			repository.save(formTemplate);
+			UiRuleValidatorService uiRuleValidatorService = new UiRuleValidatorServiceImpl(null, formId, input);
+			val rvo = uiRuleValidatorService.validate(uiRuleValidatorService.getRules());
+			if (UiRuleValidatorService.success(rvo)) {
+
+				val om = new ObjectMapper();
+				val formTemplate = om.readValue(input.toJSONString(), FormInformation.class);
+				formTemplate.setApplication(appName);
+				repository.save(formTemplate);
+			}
+			json.put("success", UiRuleValidatorService.success(rvo));
+			json.put("outcomeList", rvo);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -85,14 +94,16 @@ public class FormInformationServiceImpl implements FormInformationService {
 	 * java.lang.String)
 	 */
 	@Override
-	public JSONObject getData(String appName, String formName, String dataid) throws JsonParseException, JsonMappingException, IOException {
-		System.out.println("****appName=" + appName + " formName=" + formName + " dataid=" + dataid);
-		val root = dataid.trim().equals("0") ? findTemplateByName(appName.trim(), formName.trim()) : repository.findFormData(appName.trim(), formName.trim(), dataid.trim());
-		System.out.println("getData root=" + root);
+	public Map<String, Object> getData(String appName, String formName, String dataid) throws JsonParseException, JsonMappingException,
+			IOException {
+		logger.debug("****appName=" + appName + " formName=" + formName + " dataid=" + dataid);
+		val root = dataid.trim().equals("0") ? findTemplateByName(appName.trim(), formName.trim()) : repository.findFormData(appName.trim(),
+				formName.trim(), dataid.trim());
+		logger.debug("getData root=" + root);
 		val map = Utils.convertAttributeToUi(root);
-		System.out.println("getData map=" + map);
-		
-		return new JSONObject(map);
+		logger.debug("getData map=" + map);
+
+		return map;
 	}
 
 	/*
@@ -120,7 +131,7 @@ public class FormInformationServiceImpl implements FormInformationService {
 
 	@Override
 	public String getApplicationDisplayName(String appName) {
-		return "vendor_management";
+		return "Vendor Management";
 	}
 
 	@Override

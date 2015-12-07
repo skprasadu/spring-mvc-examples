@@ -22,18 +22,13 @@ import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import com.formbuilder.dto.ColumnDTO;
+import com.formbuilder.dto.RuleValidationOutcome;
 import com.formbuilder.dto.UiForm;
 import com.formbuilder.dto.UiFormLink;
-import com.formbuilder.service.RuleValidationOutcome;
-import com.formbuilder.service.UiRuleValidatorService;
+import com.formbuilder.service.UiRuleValidatorServiceImpl;
 
 @Repository
 public class UiFormDaoImpl implements UiFormDao {
@@ -385,7 +380,7 @@ public class UiFormDaoImpl implements UiFormDao {
 	@Override
 	public List<RuleValidationOutcome> saveFormData(String appName, int formId, int dataId, JSONObject input) throws ParseException, SQLException {
 		logger.debug(input);
-		UiRuleValidatorService uiRuleValidatorService = new UiRuleValidatorService(jdbcTemplate, formId, input);
+		UiRuleValidatorService uiRuleValidatorService = new UiRuleValidatorServiceImpl(jdbcTemplate, formId, input);
 		val rvo = uiRuleValidatorService.validate(uiRuleValidatorService.getRules());
 		if(UiRuleValidatorService.success(rvo)){
 
@@ -621,228 +616,8 @@ public class UiFormDaoImpl implements UiFormDao {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.boeing.cgaas.dao.UiFormDao#validate(org.json.simple.JSONObject)
-	 */
-	@Override
-	public JSONObject validate(JSONObject input) {
-
-		String name = String.valueOf(input.get("LDAP Users"));
-		String asset = String.valueOf(input.get("Info Asset"));
-		String flow = String.valueOf(input.get("Authorization Flows"));
-		String flows[] = { "flow_5.4", "flow_5.5", "flow_5.6" };
-		// validate flow 5_4
-
-		List<Integer> authIds = flow5_4(name);
-		if (flow.equalsIgnoreCase("flow_5.4") && checkPermission(authIds)) {
-			JSONObject jsonObject = new JSONObject();
-			jsonObject.put("result", "Permitted");
-			jsonObject.put("exception", "");
-			jsonObject.put("flow_level", "5.4");
-			return jsonObject;
-
-		} else if (checkPermission(authIds) && (flow.equalsIgnoreCase("flow_5.5") || flow.equalsIgnoreCase("flow_5.6"))) {
-
-			List<Integer> info_asset_auths = flow5_5(authIds, input);
-			if (flow.equalsIgnoreCase("flow_5.5") && checkPermission(info_asset_auths)) {
-				JSONObject jsonObject = new JSONObject();
-				jsonObject.put("result", "Permitted");
-				jsonObject.put("exception", "");
-				jsonObject.put("flow_level", "5.5");
-				return jsonObject;
-
-			} else if (checkPermission(info_asset_auths) && flow.equalsIgnoreCase("flow_5.6")) {
-
-				// flow 5.6
-				List<Integer> sow_authids = flow5_6(info_asset_auths, input);
-				if (sow_authids != null && sow_authids.size() > 0) {
-					JSONObject jsonObject = new JSONObject();
-					jsonObject.put("result", "Permitted");
-					jsonObject.put("exception", "");
-					jsonObject.put("flow_level", "5.6");
-					return jsonObject;
-				} else {
-					JSONObject jsonObject = new JSONObject();
-					jsonObject.put("result", "Permission Denied");
-					jsonObject.put("reason", "Due to no authority idenitified for the given user's SOW ");
-					jsonObject.put("exception", "");
-					jsonObject.put("flow_level", "5.6");
-					return jsonObject;
-				}
-
-			} else {
-
-				JSONObject jsonObject = new JSONObject();
-				jsonObject.put("result", "Permission Denied");
-				jsonObject.put("reason", "Due to no authority idenitified for the given info asset");
-				jsonObject.put("exception", "");
-				jsonObject.put("flow_level", "5.5");
-				return jsonObject;
-			}
-
-		} else {
-
-			JSONObject jsonObject = new JSONObject();
-			jsonObject.put("result", "Permission Denied");
-			jsonObject.put("reason", "Due to no authority idenitified for the given user's supplier");
-			jsonObject.put("exception", "");
-			jsonObject.put("flow_level", "5.4");
-			return jsonObject;
-
-		}
-	}
-
-	private boolean checkPermission(List<Integer> ids) {
-
-		if (ids == null || ids.size() == 0)
-			return false;
-		else
-			return true;
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see com.boeing.cgaas.dao.UiFormDao#diaplsyValidate()
 	 */
-	@Override
-	public Map diaplsyValidate() {
-		val rootMap = new LinkedHashMap();
-
-		String sql = String.format("select name from ldap_users");
-
-		val relnList = jdbcTemplate.query(sql, (rs, rowNum) -> {
-			return rs.getObject(1);
-		});
-
-		// None selected
-		val json1 = new LinkedHashMap();
-		relnList.forEach(x -> {
-
-			Map jsonLoc = new LinkedHashMap();
-			jsonLoc.put("label", x);
-			Boolean checked = false;
-			jsonLoc.put("val", Boolean.toString(checked));
-			jsonLoc.put("slaveTo", Boolean.toString(checked));
-			json1.put(x, jsonLoc);
-		});
-
-		val relnTableJson = new LinkedHashMap();
-		relnTableJson.put("type", "select");
-		relnTableJson.put("label", "LDAP Users");
-		relnTableJson.put("options", json1);
-
-		rootMap.put("LDAP Users", relnTableJson);
-
-		sql = String.format("select name from info_asset");
-		val relnList1 = jdbcTemplate.query(sql, (rs, rowNum) -> {
-			return rs.getObject(1);
-		});
-
-		// None selected
-		val json2 = new LinkedHashMap();
-		relnList1.forEach(x -> {
-
-			Map jsonLoc = new LinkedHashMap();
-			jsonLoc.put("label", x);
-			Boolean checked = false;
-			jsonLoc.put("val", Boolean.toString(checked));
-			jsonLoc.put("slaveTo", Boolean.toString(checked));
-			json2.put(x, jsonLoc);
-		});
-		val relnTableJson1 = new LinkedHashMap();
-		relnTableJson1.put("type", "select");
-		relnTableJson1.put("label", "Info Asset");
-		relnTableJson1.put("options", json2);
-		rootMap.put("Info Asset", relnTableJson1);
-
-		val json4 = new LinkedHashMap();
-
-		for (String flow : flows) {
-
-			Map jsonLoc = new LinkedHashMap();
-			jsonLoc.put("label", flow);
-			Boolean checked = false;
-			jsonLoc.put("val", Boolean.toString(checked));
-			jsonLoc.put("slaveTo", Boolean.toString(checked));
-			json4.put(flow, jsonLoc);
-		}
-
-		val flowInfo = new LinkedHashMap();
-		flowInfo.put("type", "select");
-		flowInfo.put("label", "Authorization Flows");
-		flowInfo.put("options", json4);
-		rootMap.put("Authorization Flows", flowInfo);
-
-		val json3 = new LinkedHashMap();
-		json3.put("type", "submit");
-		json3.put("label", "Validate");
-		rootMap.put("submit", json3);
-
-		return rootMap;
-	}
-
-	private List<Integer> flow5_4(String name) {
-
-		List<Integer> result = null;
-		int supplier_id = 0;
-
-		String best_code = (String) jdbcTemplate.queryForObject("select supplier_boeing_external_company from ldap_users where name=?",
-				new Object[] { name }, String.class);
-
-		if (best_code != null)
-			result = (List<Integer>) jdbcTemplate.queryForList("" + "select distinct(auth_id) from auth_supplier_relationship"
-					+ " where supplier_id=(select id from supplier where best_code=?)", new Object[] { best_code }, Integer.class);
-
-		return result;
-
-	}
-
-	public List<Integer> flow5_5(List<Integer> authIds, JSONObject input) {
-
-		String infoAsset = String.valueOf(input.get("Info Asset"));
-		String sql = String.format("select id from info_asset where  name='%s'", infoAsset.trim());
-		int info_asset_id = jdbcTemplate.queryForObject(sql, Integer.class);
-		List<Integer> info_auth_ids = null;
-		if (info_asset_id > 0) {
-			info_auth_ids = jdbcTemplate.queryForList("select distinct(auth_id) from auth_info_asset_relationship where info_asset_id=?",
-					new Object[] { new Integer(info_asset_id) }, Integer.class);
-		}
-
-		if (info_auth_ids != null && info_auth_ids.size() > 0) {
-			authIds.retainAll(info_auth_ids);
-			return authIds;
-		} else {
-			return null;
-		}
-
-	}
-
-	private List<Integer> flow5_6(List<Integer> authIds, JSONObject input) {
-
-		String ids = "";
-		for (Integer id : authIds) {
-			ids = ids + "," + id;
-
-		}
-
-		List<Integer> sow_authids = null;
-
-		List<Integer> sow_ids = jdbcTemplate.query(
-				String.format("SELECT distinct(sow_activity_id) from auth_sow_activity_relationship WHERE auth_id IN (%s)", ids.substring(1)),
-				new RowMapper<Integer>() {
-
-					public Integer mapRow(ResultSet result, int count) throws SQLException {
-						return result.getInt(1);
-
-					}
-
-				});
-
-		return sow_ids;
-
-	}
-
 	public int deleteRow(String appName, int rowId, int formId) throws SQLException {
 
 		UiForm uiform = getFormInfo(appName, formId);

@@ -1,4 +1,4 @@
-package com.formbuilder.service;
+package com.formbuilder.dto;
 
 import lombok.Data;
 

@@ -36,4 +36,19 @@
 			<version>2.7.0-rc1</version>
 		</dependency>
 	</dependencies>
+	<build>
+		<finalName>formbuilder_lib</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
 </project>

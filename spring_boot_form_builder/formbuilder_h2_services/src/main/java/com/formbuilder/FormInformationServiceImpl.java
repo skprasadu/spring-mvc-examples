@@ -18,9 +18,9 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.formbuilder.dto.FormInformation;
+import com.formbuilder.dto.RuleValidationOutcome;
 import com.formbuilder.dto.UiForm;
-import com.formbuilder.service.RuleValidationOutcome;
-import com.formbuilder.service.UiRuleValidatorService;
+import com.formbuilder.service.UiRuleValidatorServiceImpl;
 
 @Service
 public class FormInformationServiceImpl implements FormInformationService {
@@ -56,23 +56,21 @@ public class FormInformationServiceImpl implements FormInformationService {
 	 * java.lang.String)
 	 */
 	@Override
-	public JSONObject getData(String appName, String formName, String dataid) throws JsonParseException, JsonMappingException,
+	public Map<String, Object> getData(String appName, String formName, String dataid) throws JsonParseException, JsonMappingException,
 			IOException {
 		try {
 			val form = repository.getFormInfo(appName, Integer.valueOf(formName));
 			val formLinks = repository.getFormLinkInfo(appName, Integer.valueOf(formName));
 
 			val json = repository.getFormData(appName, Integer.valueOf(dataid), form, formLinks);
-			val json1 = new LinkedHashMap();
+			val json1 = new LinkedHashMap<String, Object>();
 			json1.put("fields", json);
 			json1.put("type", "fieldset");
 			json1.put("label", form.getDisplayName());
-			val json2 = new LinkedHashMap();
+			val json2 = new LinkedHashMap<String, Object>();
 			json2.put(form.getFormTableName(), json1);
 
-			JSONObject json3 = new JSONObject(json2);
-
-			return json3;
+			return json2;
 		} catch (NumberFormatException | SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -147,7 +145,7 @@ public class FormInformationServiceImpl implements FormInformationService {
 			Integer iDataId = Integer.valueOf(dataId);
 			Integer iFormId = Integer.valueOf(formId);
 			List<RuleValidationOutcome> outcomes = repository.saveFormData(appName, iFormId, iDataId, input);
-			json.put("success", UiRuleValidatorService.success(outcomes));
+			json.put("success", UiRuleValidatorServiceImpl.success(outcomes));
 			json.put("outcomeList", outcomes);
 		} catch (ParseException | SQLException e) {
 			// TODO Auto-generated catch block

@@ -65,7 +65,7 @@ public class DynamicController {
 	}
 
 	@RequestMapping("/getFormData/{app_name}/{form_id}/{data_id}")
-	public JSONObject getFormData(@PathVariable("app_name") String appName, @PathVariable("form_id") String formId, @PathVariable("data_id") int dataId) throws SQLException {
+	public Map<String, Object> getFormData(@PathVariable("app_name") String appName, @PathVariable("form_id") String formId, @PathVariable("data_id") int dataId) throws SQLException {
 		try {
 			return formTemplatesService.getData(appName, formId, String.valueOf(dataId));
 		} catch (IOException e) {

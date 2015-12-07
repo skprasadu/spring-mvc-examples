@@ -21,7 +21,7 @@ public interface FormInformationService {
 
 	public abstract FormInformation findTemplateByName(String appName, String name);
 
-	public abstract JSONObject getData(String appName, String formName, String dataid) throws JsonParseException, JsonMappingException,
+	public abstract Map<String, Object> getData(String appName, String formName, String dataid) throws JsonParseException, JsonMappingException,
 			IOException;
 
 	public abstract LinkedHashMap findAllDataByNames(String appName, String formName);

@@ -1,4 +1,4 @@
-package com.formbuilder.service;
+package com.formbuilder;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -6,23 +6,24 @@ import java.util.stream.Collectors;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.springframework.jdbc.core.JdbcTemplate;
 
+import com.formbuilder.dto.RuleValidationOutcome;
 import com.formbuilder.dto.UiRule;
 import com.formbuilder.rule.Rule;
 
-public class UiRuleValidatorService {
-	private JdbcTemplate jdbcTemplate;
-	private int formId;
-	private JSONObject input;
+public abstract class UiRuleValidatorService {
+	protected String formId;
+	protected JSONObject input;
 	private static final RuleValidationOutcome successOutcome = new RuleValidationOutcome("success", "");
 
-	public UiRuleValidatorService(JdbcTemplate jdbcTemplate, int formId, JSONObject input) {
-		this.jdbcTemplate = jdbcTemplate;
+	public UiRuleValidatorService(String formId, JSONObject input) {
 		this.formId = formId;
 		this.input = input;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.formbuilder.service.UiRuleValidatorService#validate(java.util.List)
+	 */
 	public List<RuleValidationOutcome> validate(List<UiRule> rules) {
 		try {
 			return rules.stream().map(x -> validateRule(x)).collect(Collectors.toList());
@@ -66,11 +67,9 @@ public class UiRuleValidatorService {
 		return null;
 	}
 
-	public List<UiRule> getRules() {
-		String sql = String.format("select * from ui_rule where ui_form_id=%d", formId);
-		return jdbcTemplate.query(sql, (rs, rowNum) -> new UiRule(rs.getInt("ui_form_id"), rs.getString("clause")));
-	}
 
+	public abstract List<UiRule> getRules();
+	
 	public static boolean success(List<RuleValidationOutcome> rvo) {
 		return (rvo.stream().filter(x -> x.getOutcome().equals("failure")).count() == 0);
 	}

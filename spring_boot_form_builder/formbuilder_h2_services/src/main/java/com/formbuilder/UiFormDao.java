@@ -7,9 +7,9 @@ import java.util.Map;
 
 import org.json.simple.JSONObject;
 
+import com.formbuilder.dto.RuleValidationOutcome;
 import com.formbuilder.dto.UiForm;
 import com.formbuilder.dto.UiFormLink;
-import com.formbuilder.service.RuleValidationOutcome;
 
 public interface UiFormDao {
 
@@ -25,10 +25,6 @@ public interface UiFormDao {
 
 	public abstract List<RuleValidationOutcome> saveFormData(String appName, int formId,int dataId, JSONObject input) throws ParseException, SQLException;
 
-	public abstract JSONObject validate(JSONObject input);
-
-	public abstract Map diaplsyValidate();
-	
 	public int deleteRow(String appName, int rowId,int formId) throws SQLException;
 
 	public abstract String getApplicationDisplayName(String appName);
