@@ -52,26 +52,6 @@ public class FormInformationServiceImpl implements FormInformationService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.formbuilder.FormInformationService#save(com.formbuilder.dao.
-	 * FormInformation)
-	 */
-	@Override
-	public JSONObject save(JSONObject input, String appName, int formId, int dataId) {
-		JSONObject json = new JSONObject();
-		try {
-			List<RuleValidationOutcome> outcomes = repository.saveFormData(appName, formId, dataId, input);
-			json.put("success", UiRuleValidatorService.success(outcomes));
-			json.put("outcomeList", outcomes);
-		} catch (ParseException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return json;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see com.formbuilder.FormInformationService#getData(java.lang.String,
 	 * java.lang.String)
 	 */
@@ -121,21 +101,6 @@ public class FormInformationServiceImpl implements FormInformationService {
 	}
 
 	@Override
-	public void deleteRecord(String appName, int rowId, int formId) {
-		// TODO Auto-generated method stub
-		JSONObject json = new JSONObject();
-		logger.debug("test delete");
-		logger.debug("Table id " + formId);
-		logger.debug("row id " + rowId);
-		try {
-			repository.deleteRow(appName, rowId, formId);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	@Override
 	public boolean hideDesigner() {
 		// TODO Auto-generated method stub
 		return true;
@@ -156,5 +121,38 @@ public class FormInformationServiceImpl implements FormInformationService {
 	public FormInformation findTemplateByName(String appName, String name) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void deleteRecord(String appName, int rowId, String formId) {
+		// TODO Auto-generated method stub
+		JSONObject json = new JSONObject();
+		logger.debug("test delete");
+		logger.debug("Table id " + formId);
+		logger.debug("row id " + rowId);
+		try {
+			Integer iRowId = Integer.valueOf(rowId);
+			Integer iFormId = Integer.valueOf(formId);
+			repository.deleteRow(appName, iRowId, iFormId);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public JSONObject save(JSONObject input, String appName, String formId, int dataId) {
+		JSONObject json = new JSONObject();
+		try {
+			Integer iDataId = Integer.valueOf(dataId);
+			Integer iFormId = Integer.valueOf(formId);
+			List<RuleValidationOutcome> outcomes = repository.saveFormData(appName, iFormId, iDataId, input);
+			json.put("success", UiRuleValidatorService.success(outcomes));
+			json.put("outcomeList", outcomes);
+		} catch (ParseException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return json;
 	}
 }

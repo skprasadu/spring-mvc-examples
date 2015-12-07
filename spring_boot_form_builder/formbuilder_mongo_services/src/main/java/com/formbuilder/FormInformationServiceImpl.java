@@ -131,7 +131,7 @@ public class FormInformationServiceImpl implements FormInformationService {
 	@Override
 	public FormInformation findTemplateByName(String appName, String name) {
 		// TODO Auto-generated method stub
-		System.out.println("findTemplateByName appName=" + appName + " name=" + name);
+		logger.debug("findTemplateByName appName=" + appName + " name=" + name);
 		return repository.findTemplateByName(appName, name);
 	}
 }
