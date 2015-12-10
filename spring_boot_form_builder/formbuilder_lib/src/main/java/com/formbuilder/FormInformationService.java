@@ -17,7 +17,7 @@ public interface FormInformationService {
 
 	public abstract List<Map> findAllFormTemplates(String appName) throws Exception;
 
-	public abstract JSONObject save(JSONObject input, String appName, String formId, int dataId);
+	public abstract JSONObject save(JSONObject input, String appName, String formId, String dataId);
 
 	public abstract FormInformation findTemplateByName(String appName, String name);
 
@@ -31,5 +31,7 @@ public interface FormInformationService {
 	public abstract String getApplicationDisplayName(String appName);
 
 	void deleteAll();
+
+	void saveForm(FormInformation formInformation);
 
 }

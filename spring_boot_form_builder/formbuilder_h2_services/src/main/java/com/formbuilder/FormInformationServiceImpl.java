@@ -139,7 +139,7 @@ public class FormInformationServiceImpl implements FormInformationService {
 	}
 
 	@Override
-	public JSONObject save(JSONObject input, String appName, String formId, int dataId) {
+	public JSONObject save(JSONObject input, String appName, String formId, String dataId) {
 		JSONObject json = new JSONObject();
 		try {
 			Integer iDataId = Integer.valueOf(dataId);
@@ -152,5 +152,10 @@ public class FormInformationServiceImpl implements FormInformationService {
 			e.printStackTrace();
 		}
 		return json;
+	}
+
+	@Override
+	public void saveForm(FormInformation formInformation) {
+		// TODO Auto-generated method stub
 	}
 }

@@ -18,19 +18,21 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.formbuilder.dto.FormInformation;
-import com.formbuilder.dto.RuleValidationOutcome;
 import com.formbuilder.dto.UiForm;
 import com.google.common.collect.ImmutableMap;
 
 @Service
 public class FormInformationServiceImpl implements FormInformationService {
 
-	private final FormInformationRepository repository;
 	private static Logger logger = Logger.getLogger(FormInformationServiceImpl.class);
 
+	private final FormInformationRepository repository;
+	private final UiRuleValidatorServiceImpl uiRuleValidatorService;
+
 	@Autowired
-	public FormInformationServiceImpl(FormInformationRepository repository) {
+	public FormInformationServiceImpl(FormInformationRepository repository, UiRuleValidatorServiceImpl uiRuleValidatorService) {
 		this.repository = repository;
+		this.uiRuleValidatorService = uiRuleValidatorService;
 	}
 
 	/*
@@ -65,26 +67,33 @@ public class FormInformationServiceImpl implements FormInformationService {
 	 * FormInformation)
 	 */
 	@Override
-	public JSONObject save(JSONObject input, String appName, String formId, int dataId) {
+	public JSONObject save(JSONObject input, String appName, String formId, String dataId) {
 		JSONObject json = new JSONObject();
-		try {
-			UiRuleValidatorService uiRuleValidatorService = new UiRuleValidatorServiceImpl(null, formId, input);
-			val rvo = uiRuleValidatorService.validate(uiRuleValidatorService.getRules());
-			if (UiRuleValidatorService.success(rvo)) {
+		uiRuleValidatorService.setInput(input);
+		uiRuleValidatorService.setFormId(formId);
+		val rvo = uiRuleValidatorService.validate(uiRuleValidatorService.getRules());
+		if (UiRuleValidatorService.success(rvo)) {
+			val formTemplate = dataId.equals("0") ? findTemplateByName(appName, formId) : repository.findFormData(appName, formId, dataId);
 
-				val om = new ObjectMapper();
-				val formTemplate = om.readValue(input.toJSONString(), FormInformation.class);
-				formTemplate.setApplication(appName);
-				repository.save(formTemplate);
+			val om = new ObjectMapper();
+			logger.debug("input" + input.toJSONString());
+			if (dataId.equals("0")) {
+				formTemplate.setId(null);
+				formTemplate.setType("data");
 			}
-			json.put("success", UiRuleValidatorService.success(rvo));
-			json.put("outcomeList", rvo);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// combine formTemplate and input
+			Utils.combineFormDataAndInput(formTemplate, input);
+			formTemplate.setApplication(appName);
+			repository.save(formTemplate);
 		}
+		json.put("success", UiRuleValidatorService.success(rvo));
+		json.put("outcomeList", rvo);
+		return json;
+	}
 
-		return null;
+	@Override
+	public void saveForm(FormInformation formInformation) {
+		repository.save(formInformation);
 	}
 
 	/*
@@ -115,12 +124,18 @@ public class FormInformationServiceImpl implements FormInformationService {
 	 */
 	@Override
 	public LinkedHashMap findAllDataByNames(String appName, String formName) {
-		/*
-		 * return repository.findAllFormData(formName) .map(x -> { Map map = new
-		 * LinkedHashMap(); map.put(x.getId(), x.getRootnode().getLabel());
-		 * return map; }) .collect(Collectors.toList());
-		 */
-		return null;
+
+		List<Map> list = repository.findAllFormData(appName, formName).map(x -> {
+			Map map = new LinkedHashMap();
+			map.put("id", x.getId());
+			map.put("name", x.getRootnode().getLabel());
+			return map;
+		}).collect(Collectors.toList());
+
+		val map = new LinkedHashMap();
+		map.put("formName", formName);
+		map.put("formList", list);
+		return map;
 	}
 
 	@Override

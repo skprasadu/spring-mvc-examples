@@ -17,18 +17,17 @@
 
     <div class="row col-md-9">
         <table class="table table-hover table-striped table-condensed">
-            <thead>
-				<th>Name</th>
-                <th></th>
-            </thead>
-            <tbody>
-                <tr ng-repeat="message in messages | filter:query">
-                    <td><a ui-sref="formbuilder.renderDesignOfForms( { formid: '{{message.id}}' } )">{{message.name}}</a></td>
-                    <td class="text-center">
-                        <a href=""><span class="glyphicon glyphicon-remove" ng-click="deleteDesignOfForms(message.id)" style="color:red"></span></a>
-                    </td>
-                </tr>
-            </tbody>
+	            <tbody ng-repeat="menuEntry in messages | filter:query">
+	                <tr><td><span style="font-weight:bold">{{menuEntry.group}}</span></td></tr>
+	                <tr ng:repeat="menuEntryList in menuEntry.tableList">
+						<td>{{menuEntryList.displayName}}: </td>
+						<td><a ui-sref="formbuilder.renderDesignOfForms( {app_name: '{{app_name}}', formid: '{{menuEntryList.id}}' } )">Edit</a></td>
+                    	<td class="text-center">
+                        	<a href=""><span class="glyphicon glyphicon-remove" ng-click="deleteAttribute(menuEntryList.id)" style="color:red"></span></a>
+                    	</td>
+						
+					</tr>
+	            </tbody>
         </table>
     </div>
     

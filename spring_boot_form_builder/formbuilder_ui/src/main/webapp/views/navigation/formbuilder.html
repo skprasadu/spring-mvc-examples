@@ -34,10 +34,11 @@
 	            <tbody ng-repeat="menuEntry in menuEntries | filter:query">
 					<tr ng-hide="{{isDisabled}}" >
 						<td>Design Of Forms: </td>
-						<td><a ui-sref="formbuilder.listDesignOfForms( )">List</a></td> 
+						<td><a ui-sref="formbuilder.listDesignOfForms( { app_name: '{{ applicationName }}' })">List</a></td> 
 						<td>|</td> 
-						<td><a ui-sref="formbuilder.renderDesignOfForms( { dataid: '0' })">Create</a></td>					
-	                </tr>	            	<tr><td><span style="font-weight:bold">{{menuEntry.group}}</span></td></tr>
+						<td><a ui-sref="formbuilder.renderDesignOfForms( { app_name: '{{ applicationName }}', formid: '0' })">Create</a></td>
+	                </tr>	            	
+	                <tr><td><span style="font-weight:bold">{{menuEntry.group}}</span></td></tr>
 	                <tr ng:repeat="menuEntryList in menuEntry.tableList">
 						<td>{{menuEntryList.displayName}}: </td>
 						<td><a ui-sref="formbuilder.listAttributes( {app_name: '{{ applicationName }}', formid: '{{menuEntryList.id}}' } )">List</a></td> 

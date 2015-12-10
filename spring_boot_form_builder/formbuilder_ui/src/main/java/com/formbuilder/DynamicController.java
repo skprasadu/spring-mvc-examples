@@ -36,7 +36,7 @@ public class DynamicController {
 	}
 
 	@RequestMapping(value = "/saveForm", method = RequestMethod.POST)
-	public JSONObject saveForm(@RequestBody JSONObject input, @RequestParam("app_name") String appName, @RequestParam("formid") String formId, @RequestParam("dataid") int dataId)
+	public JSONObject saveForm(@RequestBody JSONObject input, @RequestParam("app_name") String appName, @RequestParam("formid") String formId, @RequestParam("dataid") String dataId)
 			throws ParseException, SQLException {
 		return formTemplatesService.save(input, appName, formId, dataId);
 	}
@@ -65,7 +65,7 @@ public class DynamicController {
 	}
 
 	@RequestMapping("/getFormData/{app_name}/{form_id}/{data_id}")
-	public Map<String, Object> getFormData(@PathVariable("app_name") String appName, @PathVariable("form_id") String formId, @PathVariable("data_id") int dataId) throws SQLException {
+	public Map<String, Object> getFormData(@PathVariable("app_name") String appName, @PathVariable("form_id") String formId, @PathVariable("data_id") String dataId) throws SQLException {
 		try {
 			return formTemplatesService.getData(appName, formId, String.valueOf(dataId));
 		} catch (IOException e) {
@@ -82,15 +82,14 @@ public class DynamicController {
 		return 1;
 	}
 	
-	@RequestMapping("/getDesignOfForm/{formName}")
+	@RequestMapping("/getDesignOfForm/{app_name}/{formName}")
 	public FormInformation getDesignOfForm(@PathVariable("app_name") String appName, @PathVariable("formName") String formName) throws JsonParseException, JsonMappingException,
 			IOException {
 		return formTemplatesService.findTemplateByName(appName, formName);
 	}
 
 	@RequestMapping(value = "/saveDesignOfForm", method = RequestMethod.POST)
-	public void saveDesignOfForm(@RequestBody FormInformation input) {
-		//formTemplatesService.save(input);
+	public void saveDesignOfForm(@RequestBody FormInformation formInformation) {
+		formTemplatesService.saveForm(formInformation);
 	}
-
 }

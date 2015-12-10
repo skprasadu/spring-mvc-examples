@@ -14,8 +14,11 @@ angular.module('appDynApp')
 		} else {
 			$scope.formid = 1;
 		}
+		if($location.search().app_name != undefined){
+			$scope.app_name = $location.search().app_name;
+		}
 		
-        $http.get('./getTemplateList/').success(function (data, status, headers, config) {
+        $http.get('./getFormList/' + $scope.app_name).success(function (data, status, headers, config) {
             $scope.messages = data;
         }).error(function (data, status, headers, config) {
              $scope.status.message="Can't retrieve messages list!";

@@ -22,6 +22,6 @@ public class UiRuleValidatorServiceImpl extends UiRuleValidatorService {
 	@Override
 	public List<UiRule> getRules() {
 		String sql = String.format("select * from ui_rule where ui_form_id=%d", formId);
-		return jdbcTemplate.query(sql, (rs, rowNum) -> new UiRule(rs.getInt("ui_form_id"), rs.getString("clause")));
+		return jdbcTemplate.query(sql, (rs, rowNum) -> new UiRule("", rs.getString("ui_form_id"), rs.getString("clause")));
 	}
 }

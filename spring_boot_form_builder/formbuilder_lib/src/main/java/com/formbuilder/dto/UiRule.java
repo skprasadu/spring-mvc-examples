@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class UiRule {
 	
-	private final int uiFormId;
+	private final String id;
+	private final String uiFormId;
 	private final String clause;
 }

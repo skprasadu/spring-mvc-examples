@@ -1,18 +1,39 @@
 package com.formbuilder;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.json.simple.JSONObject;
-import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.formbuilder.dto.UiRule;
 
+@Service
 public class UiRuleValidatorServiceImpl extends UiRuleValidatorService {
-	private MongoTemplate mongoTemplate;
+	private final UiFormRepository repository;
 
-	public UiRuleValidatorServiceImpl(MongoTemplate mongoTemplate, String formId, JSONObject input) {
-		super(formId, input);
-		this.mongoTemplate = mongoTemplate;
+	@Autowired
+	public UiRuleValidatorServiceImpl(UiFormRepository repository) {
+		super("", null);
+		this.repository = repository;
+	}
+
+	
+	public void setFormId(String formId){
+		this.formId = formId;
+	}
+	
+	public void setInput(JSONObject input){
+		this.input = input;
+	}
+
+	public String getFormId(){
+		return formId;
+	}
+	
+	public JSONObject getInput(){
+		return input;
 	}
 
 	/* (non-Javadoc)
@@ -20,7 +41,10 @@ public class UiRuleValidatorServiceImpl extends UiRuleValidatorService {
 	 */
 	@Override
 	public List<UiRule> getRules() {
-		String sql = String.format("select * from ui_rule where ui_form_id=%d", formId);
-		return null;
+		return repository.findAllRulesForForm(formId).collect(Collectors.toList());
+	}
+	
+	public void save(UiRule rule){
+		repository.save(rule);
 	}
 }

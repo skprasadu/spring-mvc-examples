@@ -2,13 +2,13 @@ package com.formbuilder;
 
 import java.util.stream.Stream;
 
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 
 import com.formbuilder.dto.FormInformation;
 
 
-public interface FormInformationRepository extends CrudRepository<FormInformation, Long> {
+public interface FormInformationRepository extends MongoRepository<FormInformation, String> {
 
 	@Query(value = "{\"type\": \"template\", \"application\": ?0}, {\"_id\":1, \"rootnode.id\" : 1, \"rootnode.label\" : 1 }")
 	Stream<FormInformation> findAllFormTemplates(String appName);

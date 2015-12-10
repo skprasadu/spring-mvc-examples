@@ -23,12 +23,15 @@ angular.module('appDynApp')
 						      "clearList":"",
 						      "listItems":[]
 				} };
+				if($location.search().app_name != undefined){
+					$scope.app_name = $location.search().app_name;
+				}
 
 				if($location.search().formid != undefined){
 					//$http.get('./sample-fual-load.json').then(function(res) {
 					//	$scope.roleList = res.data;
 					//});
-					$http.get('./getDesignOfForm/' + $location.search().formid).then(function(res) {
+					$http.get('./getDesignOfForm/' + $scope.app_name + '/' + $location.search().formid).then(function(res) {
 						$scope.roleList = res.data;
 						console.log($scope.roleList)
 						if($scope.roleList.rootnode.datatype =="" || $scope.roleList.rootnode.datatype==""){
@@ -159,7 +162,7 @@ angular.module('appDynApp')
 				};
 
 				 $scope.saveDesignOfForm = function() {
-							$http.post('./saveDesignOfForm/', $scope.roleList).
+							$http.post('./saveDesignOfForm/?app_name=' +$scope.app_name + '&formid=' + $scope.formid, $scope.roleList).
 							  success(function(data, status, headers, config) {
 								  if(data == "0"){
 									  alert('dublicate Form identified. Insertion failed');
