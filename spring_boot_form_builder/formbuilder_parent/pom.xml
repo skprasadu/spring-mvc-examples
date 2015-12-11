@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.formbuilder</groupId>
-	<artifactId>formbuilder_h2_parent</artifactId>
+	<artifactId>formbuilder_parent</artifactId>
 	<packaging>pom</packaging>
 	<version>0.1</version>
 
@@ -12,6 +12,7 @@
 	<modules>
 		<module>../formbuilder_lib</module>
 		<module>../formbuilder_h2_services</module>
+		<module>../formbuilder_mongo_services</module>
 		<module>../formbuilder_ui</module>
 	</modules>
 

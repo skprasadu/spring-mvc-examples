@@ -13,7 +13,11 @@
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>1.3.0.RELEASE</version>
 	</parent>
-
+	
+	<properties>
+		<DS>h2</DS>
+	</properties>
+	
 	<dependencies>
 		<dependency>
 			<groupId>com.googlecode.json-simple</groupId>
@@ -64,7 +68,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.formbuilder</groupId>
-			<artifactId>formbuilder_mongo</artifactId>
+			<artifactId>formbuilder_${DS}</artifactId>
 			<version>0.1</version>
 		</dependency>
 		

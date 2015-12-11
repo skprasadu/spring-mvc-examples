@@ -24,7 +24,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.formbuilder.dto.UiRule;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
@@ -33,7 +32,7 @@ public class MongoFormsTemplateServiceTest {
 	@Autowired
 	FormInformationService formsService;
 	@Autowired
-	UiRuleValidatorServiceImpl uiRuleValidatorServiceImpl;
+	UiRuleValidatorService uiRuleValidatorServiceImpl;
 
 	@Before
 	public void init() throws IOException {
@@ -45,9 +44,9 @@ public class MongoFormsTemplateServiceTest {
 		formTemplate.put("entryType", "Form");
 		formsService.save(formTemplate, "vendor_management", "fuelload", "0");
 
-		UiRule rule = new UiRule(null, "fuelload",
-				"{\"action\": \"assertIfOneIsPresent\", \"input\":\"citizen_country_group__country_group_id, citizen__country_id\"}");
-		uiRuleValidatorServiceImpl.save(rule);
+		//UiRule rule = new UiRule(null, "fuelload",
+		//		"{\"action\": \"assertIfOneIsPresent\", \"input\":\"citizen_country_group__country_group_id, citizen__country_id\"}");
+		//uiRuleValidatorServiceImpl.save(rule);
 	}
 
 	static String readFile(String path, Charset encoding) throws IOException {
