@@ -23,6 +23,8 @@ angular.module('appDynApp')
 						      "clearList":"",
 						      "listItems":[]
 				} };
+				
+				
 				if($location.search().app_name != undefined){
 					$scope.app_name = $location.search().app_name;
 				}
@@ -39,7 +41,7 @@ angular.module('appDynApp')
 						}
 					});
 				};
-
+				
 				$scope.done = function() {
 					/* reset */
 					/*$scope.SaveIndividualDesignOfForm();*/

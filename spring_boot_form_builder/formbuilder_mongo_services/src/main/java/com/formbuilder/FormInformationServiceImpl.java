@@ -16,11 +16,9 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.formbuilder.dto.FormInformation;
 import com.formbuilder.dto.UiForm;
 import com.google.common.collect.ImmutableMap;
-import com.formbuilder.dto.Node;
 
 @Service
 public class FormInformationServiceImpl implements FormInformationService {
@@ -76,7 +74,6 @@ public class FormInformationServiceImpl implements FormInformationService {
 		if (UiRuleValidatorService.success(rvo)) {
 			val formTemplate = dataId.equals("0") ? findTemplateByName(appName, formId) : repository.findFormData(appName, formId, dataId);
 
-			val om = new ObjectMapper();
 			logger.debug("input" + input.toJSONString());
 			if (dataId.equals("0")) {
 				formTemplate.setId(null);
@@ -115,7 +112,7 @@ public class FormInformationServiceImpl implements FormInformationService {
 		val root = dataid.trim().equals("0") ? findTemplateByName(appName.trim(), formName.trim()) : repository.findFormData(appName.trim(),
 				formName.trim(), dataid.trim());
 		logger.debug("getData root=" + root);
-		val map = Utils.convertAttributeToUi(root);
+		val map = Utils.convertAttributeToUi(root, false);
 		logger.debug("getData map=" + map);
 
 		return map;
@@ -171,5 +168,13 @@ public class FormInformationServiceImpl implements FormInformationService {
 		// TODO Auto-generated method stub
 		logger.debug("findTemplateByName appName=" + appName + " name=" + name);
 		return repository.findTemplateByName(appName, name);
+	}
+
+	@Override
+	public Map<String, Object> getFormPreviewData(String appName, String formName) throws JsonParseException, JsonMappingException, IOException {
+		val root = findTemplateByName(appName.trim(), formName.trim());
+		val map = Utils.convertAttributeToUi(root, true);
+
+		return map;
 	}
 }

@@ -34,4 +34,6 @@ public interface FormInformationService {
 
 	void saveForm(FormInformation formInformation) throws Exception;
 
+	public abstract Map<String, Object> getFormPreviewData(String appName, String formName) throws JsonParseException, JsonMappingException, IOException;
+
 }

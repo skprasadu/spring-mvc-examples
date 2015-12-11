@@ -17,16 +17,19 @@ import com.formbuilder.dto.Node;
 public class Utils {
 	private static Logger logger = Logger.getLogger(Utils.class);
 
-	public static Map<String, Object> convertAttributeToUi(FormInformation root) throws JsonParseException, JsonMappingException, IOException {
+	public static Map<String, Object> convertAttributeToUi(FormInformation root, boolean preview) throws JsonParseException,
+			JsonMappingException, IOException {
 		// TODO Auto-generated method stub
 
 		val map = new LinkedHashMap<String, Object>();
 		val map1 = new LinkedHashMap<String, Object>();
 		Node node = root.getRootnode();
 		map.put(node.getId(), getUiInfo(node, ""));
-		map1.put("type", "submit");
-		map1.put("label", "Submit");
-		map.put("submit", map1);
+		if (!preview) {
+			map1.put("type", "submit");
+			map1.put("label", "Submit");
+			map.put("submit", map1);
+		}
 		return map;
 	}
 

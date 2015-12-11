@@ -25,6 +25,11 @@ angular.module('appDynApp', ['ui.router', 'ngSanitize', 'ui.bootstrap', 'ngTagsI
 				controller:'listDesignOfFormCreateCtrl',
 				templateUrl: 'views/navigation/formbuilder-designOfFormsCreate.html'
 			})
+			.state('formbuilder.previewDesignOfForms', {
+				url: '/previewDesignOfForms?app_name&formid',
+				controller:'designOfFormPreviewCtrl',
+				templateUrl: 'views/navigation/formbuilder-previewFormData.html'
+			})
 			.state('formbuilder.listAttributes', {
 				url: '/listAttributes?app_name&formid',
 				controller:'listAttributesCtrl',

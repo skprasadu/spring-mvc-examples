@@ -157,4 +157,10 @@ public class FormInformationServiceImpl implements FormInformationService {
 	public void saveForm(FormInformation formInformation) throws Exception {
 		// TODO Auto-generated method stub
 	}
+
+	@Override
+	public Map<String, Object> getFormPreviewData(String appName, String formName) throws JsonParseException, JsonMappingException, IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

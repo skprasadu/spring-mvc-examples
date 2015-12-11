@@ -22,6 +22,7 @@
 	                <tr ng:repeat="menuEntryList in menuEntry.tableList">
 						<td>{{menuEntryList.displayName}}: </td>
 						<td><a ui-sref="formbuilder.renderDesignOfForms( {app_name: '{{app_name}}', formid: '{{menuEntryList.id}}' } )">Edit</a></td>
+						<td><a ui-sref="formbuilder.previewDesignOfForms( {app_name: '{{app_name}}', formid: '{{menuEntryList.id}}' } )">Preview</a></td>
                     	<td class="text-center">
                         	<a href=""><span class="glyphicon glyphicon-remove" ng-click="deleteAttribute(menuEntryList.id)" style="color:red"></span></a>
                     	</td>

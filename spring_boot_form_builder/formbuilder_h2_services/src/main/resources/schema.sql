@@ -21,7 +21,8 @@ description Varchar(50)
 CREATE Table project (id Integer,
 name Varchar(50),
 project_type Varchar(50),
-start_date Date
+start_date Date,
+end_date Date
 );
 CREATE Table project_supplier_relationship (
 project_id integer,
