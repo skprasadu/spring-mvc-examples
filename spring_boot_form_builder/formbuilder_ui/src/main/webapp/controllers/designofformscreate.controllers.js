@@ -18,8 +18,8 @@ angular.module('appDynApp')
 						   "rootnode": {
 							  "children" : [], 
 						      "datatype" : "Composite-selectsingle",
-						      "id" : "fuelload",
-						      "label" : "Fuel Load",
+						      "id" : "form1",
+						      "label" : "Form 1",
 						      "clearList":"",
 						      "listItems":[]
 				} };
@@ -32,12 +32,11 @@ angular.module('appDynApp')
 					//	$scope.roleList = res.data;
 					//});
 					$http.get('./getDesignOfForm/' + $scope.app_name + '/' + $location.search().formid).then(function(res) {
-						$scope.roleList = res.data;
-						console.log($scope.roleList)
-						if($scope.roleList.rootnode.datatype =="" || $scope.roleList.rootnode.datatype==""){
-							
+						if(res.data != ''){
+							$scope.roleList = res.data;
+							console.log($scope.roleList)
+							$scope.heading="Edit Form";
 						}
-						$scope.heading="Edit Form";
 					});
 				};
 
@@ -162,6 +161,9 @@ angular.module('appDynApp')
 				};
 
 				 $scope.saveDesignOfForm = function() {
+				 		$scope.roleList.type = "template";
+				 		$scope.roleList.entryType = 'Form';
+				 		$scope.roleList.application = $scope.app_name;
 							$http.post('./saveDesignOfForm/?app_name=' +$scope.app_name + '&formid=' + $scope.formid, $scope.roleList).
 							  success(function(data, status, headers, config) {
 								  if(data == "0"){
@@ -192,22 +194,25 @@ angular.module('appDynApp')
 				$scope.ShowChecked=['radio','checkbox'];
 				$scope.clearList=['singleselect','multipleselect'];
 				
+				$scope.currentDatatype = '';
+				
 				$scope.DisableAddChild=function(flag){
 					var dataTypeToCheck="";
 					if(flag == 'new'){
 						dataTypeToCheck=$scope.temporaryNode.datatype;
 						$scope.temporaryNode.clearList="";
-							if($scope.clearList.indexOf(dataTypeToCheck)>'-1'){
-								$scope.temporaryNode.clearList=true;
-							}
-							$scope.temporaryNode.checked="";
-							if($scope.ShowChecked.indexOf(dataTypeToCheck)>'-1'){
-								$scope.temporaryNode.checked=true;
-							}
+						if($scope.clearList.indexOf(dataTypeToCheck)>'-1'){
+							$scope.temporaryNode.clearList=true;
+						}
+						$scope.temporaryNode.checked="";
+						if($scope.ShowChecked.indexOf(dataTypeToCheck)>'-1'){
+							$scope.temporaryNode.checked=true;
+						}
 					}
 					else{
-						dataTypeToCheck=$scope.mytree.currentNode.datatype;
-						$scope.mytree.currentNode.clearList="";
+						if($scope.checkForCompositeType()){
+							dataTypeToCheck=$scope.mytree.currentNode.datatype;
+							$scope.mytree.currentNode.clearList="";
 							if($scope.clearList.indexOf(dataTypeToCheck)>'-1'){
 								$scope.mytree.currentNode.clearList=true;
 							}
@@ -215,6 +220,7 @@ angular.module('appDynApp')
 							if($scope.ShowChecked.indexOf(dataTypeToCheck)>'-1'){
 								$scope.mytree.currentNode.checked=true;
 							}
+						}
 					}
 					if($scope.disabledataTypes.indexOf(dataTypeToCheck)>'-1'){
 						$scope.disableAddChild=false;
@@ -223,6 +229,27 @@ angular.module('appDynApp')
 						$scope.disableAddChild=true;
 					}
 				};
+				
+				$scope.checkForCompositeType = function(){
+					if($scope.currentDatatype == 'Composite-selectsingle' || $scope.currentDatatype == 'Composite-selectall'){
+						if($scope.mytree.currentNode.datatype != 'Composite-selectsingle' && $scope.mytree.currentNode.datatype != 'Composite-selectall'){
+							//Check if there are childern
+							if($scope.mytree.currentNode.children != undefined && $scope.mytree.currentNode.children.length > 0){
+								var r = confirm("This is a composite element, do you want all the children to be cleared the the datatype to be set?");
+								if (r == true) {
+									$scope.mytree.currentNode.children = [];
+									return true;
+								} else {
+									$scope.mytree.currentNode.datatype = $scope.currentDatatype;
+									return false;
+								}
+							}
+						}
+					}
+					$scope.currentDatatype = $scope.mytree.currentNode.datatype ;
+					return true;
+				};
+
 				//clear controls
 				$scope.SetMode=function(value){
 					$scope.mode=value;
