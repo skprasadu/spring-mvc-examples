@@ -13,7 +13,7 @@ import com.formbuilder.dto.FormInformation;
 
 public interface FormInformationService {
 
-	public abstract void deleteRecord(String appName, int rowId, String formId);
+	public abstract void deleteRecord(String appName, String rowId, String formId);
 
 	public abstract List<Map> findAllFormTemplates(String appName) throws Exception;
 
@@ -32,6 +32,6 @@ public interface FormInformationService {
 
 	void deleteAll();
 
-	void saveForm(FormInformation formInformation);
+	void saveForm(FormInformation formInformation) throws Exception;
 
 }

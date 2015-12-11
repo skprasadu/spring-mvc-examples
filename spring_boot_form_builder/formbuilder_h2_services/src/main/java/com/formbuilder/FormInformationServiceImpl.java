@@ -122,8 +122,7 @@ public class FormInformationServiceImpl implements FormInformationService {
 	}
 
 	@Override
-	public void deleteRecord(String appName, int rowId, String formId) {
-		// TODO Auto-generated method stub
+	public void deleteRecord(String appName, String rowId, String formId) {
 		JSONObject json = new JSONObject();
 		logger.debug("test delete");
 		logger.debug("Table id " + formId);
@@ -155,7 +154,7 @@ public class FormInformationServiceImpl implements FormInformationService {
 	}
 
 	@Override
-	public void saveForm(FormInformation formInformation) {
+	public void saveForm(FormInformation formInformation) throws Exception {
 		// TODO Auto-generated method stub
 	}
 }

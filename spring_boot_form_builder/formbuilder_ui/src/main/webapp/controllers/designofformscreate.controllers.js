@@ -137,27 +137,40 @@ angular.module('appDynApp')
 					};
 				}
 				
+				$scope.idSet = ['form1'];
+				$scope.pushId = function(currentNode){
+					var id = currentNode.id;
+					if($scope.idSet.indexOf(id) >= 0){
+						alert('Id has to be unique within a document');
+						currentNode.id = '';
+						return false;
+					} else{
+						$scope.idSet.push(id);
+						return true;
+					}
+				};
 				
 				$scope.addChildDone = function() {
 					/* add child */
 					var emptyArray=[];
 					console.log($scope.temporaryNode);
-					if ($scope.temporaryNode.id && $scope.temporaryNode.label) {
-						//assign children while adding new node 
-						if($scope.disabledataTypes.indexOf($scope.temporaryNode.datatype)>'-1'){
-							$scope.temporaryNode.children=emptyArray;
+					if($scope.pushId($scope.temporaryNode)){
+						if ($scope.temporaryNode.id && $scope.temporaryNode.label) {
+							//assign children while adding new node 
+							if($scope.disabledataTypes.indexOf($scope.temporaryNode.datatype)>'-1'){
+								$scope.temporaryNode.children=emptyArray;
+							}
+							console.log($scope.temporaryNode);
+							$scope.mytree.currentNode.children.push(angular
+									.copy($scope.temporaryNode));
 						}
-						console.log($scope.temporaryNode);
-						$scope.mytree.currentNode.children.push(angular
-								.copy($scope.temporaryNode));
+	
+						/* reset */
+						$scope.temporaryNode.id = "";
+						$scope.temporaryNode.label = "";
+	
+						$scope.done();
 					}
-
-					/* reset */
-					$scope.temporaryNode.id = "";
-					$scope.temporaryNode.label = "";
-
-					$scope.done();
-
 				};
 
 				 $scope.saveDesignOfForm = function() {
@@ -174,9 +187,7 @@ angular.module('appDynApp')
 								  }
 								  }).
 								  error(function(data, status, headers, config) {
-								    // called asynchronously if an error occurs
-								    // or server returns response with an error status.
-									    alert('failed')
+			                	       alert("Failed to save the data!, returned status" + status + " data =" + JSON.stringify(data));
 								  })
 					};
 					

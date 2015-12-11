@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.formbuilder.dto.FormInformation;
 import com.formbuilder.dto.UiForm;
 import com.google.common.collect.ImmutableMap;
+import com.formbuilder.dto.Node;
 
 @Service
 public class FormInformationServiceImpl implements FormInformationService {
@@ -41,8 +42,8 @@ public class FormInformationServiceImpl implements FormInformationService {
 	 * @see com.formbuilder.FormInformationService#deleteAll()
 	 */
 	@Override
-	public void deleteRecord(String appName, int rowId, String formId) {
-		// repository.deleteAll();
+	public void deleteRecord(String appName, String rowId, String formId) {
+		repository.delete(rowId);
 	}
 
 	/*
@@ -92,7 +93,12 @@ public class FormInformationServiceImpl implements FormInformationService {
 	}
 
 	@Override
-	public void saveForm(FormInformation formInformation) {
+	public void saveForm(FormInformation formInformation) throws Exception {
+		FormInformation formInformation1 = repository.findTemplateByName(formInformation.getApplication(), formInformation.getRootnode().getId());
+		
+		if(formInformation1 != null){
+			throw new Exception("Form with same name exists");
+		}
 		repository.save(formInformation);
 	}
 
@@ -128,12 +134,18 @@ public class FormInformationServiceImpl implements FormInformationService {
 		List<Map> list = repository.findAllFormData(appName, formName).map(x -> {
 			Map map = new LinkedHashMap();
 			map.put("id", x.getId());
-			map.put("name", x.getRootnode().getLabel());
+			map.put("label", x.getRootnode().getLabel());
+
+			x.getRootnode().getChildren().forEach(x1 -> {
+				map.put(x1.getLabel(), x1.getVal());
+			});
 			return map;
 		}).collect(Collectors.toList());
 
 		val map = new LinkedHashMap();
-		map.put("formName", formName);
+		if (!list.isEmpty()) {
+			map.put("formName", list.get(0).get("label"));
+		}
 		map.put("formList", list);
 		return map;
 	}

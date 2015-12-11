@@ -76,7 +76,7 @@ public class DynamicController {
 	}
 
 	@RequestMapping(value = "/deleteRecord/{app_name}/{record_id}/{form_id}", method = RequestMethod.POST)
-	public int deleteRecord(@PathVariable("app_name") String appName, @PathVariable("record_id") int rowId, @PathVariable("form_id") String formId) throws SQLException {
+	public int deleteRecord(@PathVariable("app_name") String appName, @PathVariable("record_id") String rowId, @PathVariable("form_id") String formId) throws SQLException {
 		
 		formTemplatesService.deleteRecord(appName, rowId, formId);
 		return 1;
@@ -89,7 +89,7 @@ public class DynamicController {
 	}
 
 	@RequestMapping(value = "/saveDesignOfForm", method = RequestMethod.POST)
-	public void saveDesignOfForm(@RequestBody FormInformation formInformation) {
+	public void saveDesignOfForm(@RequestBody FormInformation formInformation) throws Exception {
 		formTemplatesService.saveForm(formInformation);
 	}
 }
