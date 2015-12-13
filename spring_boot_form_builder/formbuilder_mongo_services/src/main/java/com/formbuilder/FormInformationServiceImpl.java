@@ -90,11 +90,14 @@ public class FormInformationServiceImpl implements FormInformationService {
 	}
 
 	@Override
-	public void saveForm(FormInformation formInformation) throws Exception {
-		FormInformation formInformation1 = repository.findTemplateByName(formInformation.getApplication(), formInformation.getRootnode().getId());
-		
-		if(formInformation1 != null){
-			throw new Exception("Form with same name exists");
+	public void saveForm(FormInformation formInformation, String appName, String formId) throws Exception {
+		if (formId.equals("0")) {
+			FormInformation formInformation1 = repository.findTemplateByName(formInformation.getApplication(), formInformation.getRootnode()
+					.getId());
+
+			if (formInformation1 != null) {
+				throw new Exception("Form with same name exists");
+			}
 		}
 		repository.save(formInformation);
 	}

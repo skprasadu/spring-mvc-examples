@@ -32,7 +32,7 @@ public interface FormInformationService {
 
 	void deleteAll();
 
-	void saveForm(FormInformation formInformation) throws Exception;
+	void saveForm(FormInformation formInformation, String appName, String formId) throws Exception;
 
 	public abstract Map<String, Object> getFormPreviewData(String appName, String formName) throws JsonParseException, JsonMappingException, IOException;
 

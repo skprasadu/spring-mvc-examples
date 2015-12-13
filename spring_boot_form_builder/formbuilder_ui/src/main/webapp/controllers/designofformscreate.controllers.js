@@ -30,6 +30,7 @@ angular.module('appDynApp')
 				}
 
 				if($location.search().formid != undefined){
+					$scope.formid = $location.search().formid;
 					//$http.get('./sample-fual-load.json').then(function(res) {
 					//	$scope.roleList = res.data;
 					//});
@@ -179,7 +180,7 @@ angular.module('appDynApp')
 				 		$scope.roleList.type = "template";
 				 		$scope.roleList.entryType = 'Form';
 				 		$scope.roleList.application = $scope.app_name;
-							$http.post('./saveDesignOfForm/?app_name=' +$scope.app_name + '&formid=' + $scope.formid, $scope.roleList).
+							$http.post('./saveDesignOfForm?app_name=' +$scope.app_name + '&formid=' + $scope.formid, $scope.roleList).
 							  success(function(data, status, headers, config) {
 								  if(data == "0"){
 									  alert('dublicate Form identified. Insertion failed');

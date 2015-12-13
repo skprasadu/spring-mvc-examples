@@ -91,12 +91,14 @@ public class DynamicController {
 	}
 
 	@RequestMapping(value = "/saveDesignOfForm", method = RequestMethod.POST)
-	public void saveDesignOfForm(@RequestBody FormInformation formInformation) throws Exception {
-		formTemplatesService.saveForm(formInformation);
+	public void saveDesignOfForm(@RequestBody FormInformation formInformation, @RequestParam("app_name") String appName,
+			@RequestParam("formid") String formId) throws Exception {
+		formTemplatesService.saveForm(formInformation, appName, formId);
 	}
 
 	@RequestMapping(value = "/getFormPreviewData/{app_name}/{formName}")
-	public Map<String, Object> getFormPreviewData(@PathVariable("app_name") String appName, @PathVariable("formName") String formName) throws JsonParseException, JsonMappingException, IOException {
+	public Map<String, Object> getFormPreviewData(@PathVariable("app_name") String appName, @PathVariable("formName") String formName)
+			throws JsonParseException, JsonMappingException, IOException {
 		return formTemplatesService.getFormPreviewData(appName, formName);
 	}
 }
