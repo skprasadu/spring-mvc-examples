@@ -24,6 +24,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.formbuilder.dto.FormInformation;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
@@ -40,9 +41,15 @@ public class MongoFormsTemplateServiceTest {
 		formsService.deleteAll();
 		val payload = readFile("src/test/resources/schema/form-template.json", Charset.defaultCharset());
 		val om = new ObjectMapper();
-		val formTemplate = om.readValue(payload, JSONObject.class);
-		formTemplate.put("entryType", "Form");
-		formsService.save(formTemplate, "vendor_management", "fuelload", "0");
+		val formTemplate = om.readValue(payload, FormInformation.class);
+		formTemplate.setEntryType("Form");
+		formTemplate.setApplication("vendor_management");
+		try {
+			formsService.saveForm(formTemplate, "vendor_management", "fuelload");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		//UiRule rule = new UiRule(null, "fuelload",
 		//		"{\"action\": \"assertIfOneIsPresent\", \"input\":\"citizen_country_group__country_group_id, citizen__country_id\"}");

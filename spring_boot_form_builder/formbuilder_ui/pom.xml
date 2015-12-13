@@ -68,7 +68,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.formbuilder</groupId>
-			<artifactId>formbuilder_${DS}</artifactId>
+			<artifactId>formbuilder_mongo</artifactId>
 			<version>0.1</version>
 		</dependency>
 		

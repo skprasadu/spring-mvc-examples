@@ -36,4 +36,8 @@ public interface FormInformationService {
 
 	public abstract Map<String, Object> getFormPreviewData(String appName, String formName) throws JsonParseException, JsonMappingException, IOException;
 
+	public abstract Map<String, Object> getQuickCreateDesignOfForms(String appName);
+
+	public abstract void saveQuickDesignOfForm(JSONObject input, String appName) throws JsonParseException, JsonMappingException, IOException;
+
 }

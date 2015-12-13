@@ -16,7 +16,9 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.formbuilder.dto.FormInformation;
+import com.formbuilder.dto.QuickFormInformation;
 import com.formbuilder.dto.UiForm;
 import com.google.common.collect.ImmutableMap;
 
@@ -179,5 +181,41 @@ public class FormInformationServiceImpl implements FormInformationService {
 		val map = Utils.convertAttributeToUi(root, true);
 
 		return map;
+	}
+
+	@Override
+	public Map<String, Object> getQuickCreateDesignOfForms(String appName) {
+		// TODO Auto-generated method stub
+		//{"fuelload":{"label":"Fuel Load","type":"fieldset","fields":{"load-fieldset":{"label":"Load","type":"fieldset","fields":{"load":{"type":"number","minValue":0,"maxValue":0,"placeholder":"Numeric Value"}}}}}}
+		
+		val map1 = new LinkedHashMap<String, String>();
+		map1.put("type", "textarea");
+		map1.put("label", "Quick Data Entry");
+		val map2 = new LinkedHashMap<String, Object>();
+		map2.put("quickdata", map1);
+		
+		val map3 = new LinkedHashMap<String, Object>();
+		map3.put("fields", map2);
+		map3.put("label", "Quick Data Entry Form");
+		map3.put("type", "fieldset");
+		
+		val map4 = new LinkedHashMap<String, Object>();
+		map4.put("quickdata", map3);
+		val map5 = new LinkedHashMap<String, Object>();
+		map5.put("type", "submit");
+		map5.put("label", "Submit");
+		map4.put("submit", map5);
+
+		return map4;
+	}
+
+	@Override
+	public void saveQuickDesignOfForm(JSONObject input, String appName) throws JsonParseException, JsonMappingException, IOException {
+		// TODO Auto-generated method stub
+		ObjectMapper mapper = new ObjectMapper();
+		String quickData = (String)input.get("quickdata");
+		QuickFormInformation quickFormInformation = mapper.readValue(quickData, QuickFormInformation.class);
+		
+		logger.debug(quickFormInformation);
 	}
 }

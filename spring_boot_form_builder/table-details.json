@@ -1,22 +1,22 @@
 {
-   "applicationName" : "",
+   "applicationName" : "vendor_management",
    "tableDetails" : [
       {
-         "columnNames" : "",
+         "columnNames" : "name,project_type,start_date,end_date",
          "displayNames" : [
             {
-               "name" : "",
-               "value" : ""
+               "name" : "name",
+               "value" : "project_code"
             }
          ],
          "ruleDetails" : [
             {
-               "name" : "",
-               "value" : ""
+               "name" : "assertValues",
+               "value" : "project_code"
             }
          ],
-         "tableName" : "",
-         "tableType" : ""
+         "tableName" : "project",
+         "tableType" : "Crud"
       }
    ]
 }

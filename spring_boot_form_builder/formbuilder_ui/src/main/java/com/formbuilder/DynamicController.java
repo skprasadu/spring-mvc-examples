@@ -101,4 +101,16 @@ public class DynamicController {
 			throws JsonParseException, JsonMappingException, IOException {
 		return formTemplatesService.getFormPreviewData(appName, formName);
 	}
+	
+	
+	@RequestMapping(value = "/getQuickCreateDesignOfForms/{app_name}")
+	public Map<String, Object> getQuickCreateDesignOfForms(@PathVariable("app_name") String appName)
+			throws JsonParseException, JsonMappingException, IOException {
+		return formTemplatesService.getQuickCreateDesignOfForms(appName);
+	}
+	
+	@RequestMapping(value = "/saveQuickDesignOfForm", method = RequestMethod.POST)
+	public void saveQuickDesignOfForm(@RequestBody JSONObject input, @RequestParam("app_name") String appName) throws Exception {
+		formTemplatesService.saveQuickDesignOfForm(input, appName);
+	}
 }

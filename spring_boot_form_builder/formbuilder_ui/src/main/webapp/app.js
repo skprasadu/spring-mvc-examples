@@ -25,6 +25,11 @@ angular.module('appDynApp', ['ui.router', 'ngSanitize', 'ui.bootstrap', 'ngTagsI
 				controller:'listDesignOfFormCreateCtrl',
 				templateUrl: 'views/navigation/formbuilder-designOfFormsCreate.html'
 			})
+			.state('formbuilder.renderQuickDesignOfForms', {
+				url: '/renderQuickDesignOfForms?app_name',
+				controller:'renderQuickDesignOfFormsCtrl',
+				templateUrl: 'views/navigation/formbuilder-quickDesignOfFormsCreate.html'
+			})
 			.state('formbuilder.previewDesignOfForms', {
 				url: '/previewDesignOfForms?app_name&formid',
 				controller:'designOfFormPreviewCtrl',

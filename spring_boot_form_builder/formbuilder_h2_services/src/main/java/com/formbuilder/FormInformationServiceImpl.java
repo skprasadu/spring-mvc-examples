@@ -163,4 +163,16 @@ public class FormInformationServiceImpl implements FormInformationService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public Map<String, Object> getQuickCreateDesignOfForms(String appName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void saveQuickDesignOfForm(JSONObject input, String appName) {
+		// TODO Auto-generated method stub
+		
+	}
 }

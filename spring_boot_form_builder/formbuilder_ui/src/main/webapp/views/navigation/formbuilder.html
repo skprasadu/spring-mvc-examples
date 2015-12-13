@@ -31,13 +31,17 @@
   	  <div class="row col-md-12">
 		  <div class="col-md-3">
    	        <table class="table table-hover table-striped table-condensed">
-	            <tbody ng-repeat="menuEntry in menuEntries | filter:query">
-					<tr ng-hide="{{isDisabled}}" >
+   	        	<tbody>
+					<tr ng-hide="isDisabled" >
 						<td>Design Of Forms: </td>
 						<td><a ui-sref="formbuilder.listDesignOfForms( { app_name: '{{ applicationName }}' })">List</a></td> 
 						<td>|</td> 
 						<td><a ui-sref="formbuilder.renderDesignOfForms( { app_name: '{{ applicationName }}', formid: '0' })">Create</a></td>
-	                </tr>	            	
+						<td>|</td> 
+						<td><a ui-sref="formbuilder.renderQuickDesignOfForms( { app_name: '{{ applicationName }}' })">Quick Create</a></td>
+	                </tr>
+	            </tbody>	            	
+	            <tbody ng-repeat="menuEntry in menuEntries | filter:query">
 	                <tr><td><span style="font-weight:bold">{{menuEntry.group}}</span></td></tr>
 	                <tr ng:repeat="menuEntryList in menuEntry.tableList">
 						<td>{{menuEntryList.displayName}}: </td>
