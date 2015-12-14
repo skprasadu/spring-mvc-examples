@@ -7,9 +7,10 @@ import lombok.Data;
 @Data
 public class TableDetail {
 	private String columnNames;
-	private String tableName;
-	private String tableType;
-	
-	private List<NameValue> displayNames; 
+	private List<NameValue> columnDisplayNames; 
+	private String relationshipNames;
+	private List<NameValue> relationshipDisplayNames;
 	private List<NameValue> ruleDetails; 
+	private String tableName;
+	private String tableType;	
 }

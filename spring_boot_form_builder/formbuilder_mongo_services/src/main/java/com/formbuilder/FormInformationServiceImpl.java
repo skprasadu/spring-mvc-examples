@@ -21,6 +21,7 @@ import com.formbuilder.dto.FormInformation;
 import com.formbuilder.dto.QuickFormInformation;
 import com.formbuilder.dto.UiForm;
 import com.google.common.collect.ImmutableMap;
+import static com.formbuilder.Utils.*;
 
 @Service
 public class FormInformationServiceImpl implements FormInformationService {
@@ -82,7 +83,7 @@ public class FormInformationServiceImpl implements FormInformationService {
 				formTemplate.setType("data");
 			}
 			// combine formTemplate and input
-			Utils.combineFormDataAndInput(formTemplate, input);
+			combineFormDataAndInput(formTemplate, input);
 			formTemplate.setApplication(appName);
 			repository.save(formTemplate);
 		}
@@ -117,7 +118,7 @@ public class FormInformationServiceImpl implements FormInformationService {
 		val root = dataid.trim().equals("0") ? findTemplateByName(appName.trim(), formName.trim()) : repository.findFormData(appName.trim(),
 				formName.trim(), dataid.trim());
 		logger.debug("getData root=" + root);
-		val map = Utils.convertAttributeToUi(root, false);
+		val map = convertAttributeToUi(root, false);
 		logger.debug("getData map=" + map);
 
 		return map;
@@ -178,7 +179,7 @@ public class FormInformationServiceImpl implements FormInformationService {
 	@Override
 	public Map<String, Object> getFormPreviewData(String appName, String formName) throws JsonParseException, JsonMappingException, IOException {
 		val root = findTemplateByName(appName.trim(), formName.trim());
-		val map = Utils.convertAttributeToUi(root, true);
+		val map = convertAttributeToUi(root, true);
 
 		return map;
 	}
@@ -212,10 +213,11 @@ public class FormInformationServiceImpl implements FormInformationService {
 	@Override
 	public void saveQuickDesignOfForm(JSONObject input, String appName) throws JsonParseException, JsonMappingException, IOException {
 		// TODO Auto-generated method stub
-		ObjectMapper mapper = new ObjectMapper();
+		val mapper = new ObjectMapper();
 		String quickData = (String)input.get("quickdata");
-		QuickFormInformation quickFormInformation = mapper.readValue(quickData, QuickFormInformation.class);
+		val quickFormInformation = mapper.readValue(quickData, QuickFormInformation.class);
 		
 		logger.debug(quickFormInformation);
+		val list = convertToFormInformation(quickFormInformation);
 	}
 }

@@ -1,0 +1,47 @@
+{
+   "applicationName" : "vendor_management",
+   "tableDetails" : [{
+         "columnNames" : "name,project_type,start_date,end_date",
+         "columnDisplayNames" : [{"name" : "name", "value" : "project_code"}],
+         "ruleDetails" : [{"name" : "assertIfAllPresent", "value" : "{\"input\":\"name, project_type, start_date, end_date\"}"}],
+         "tableName" : "project",
+         "tableType" : "Crud"
+      },
+      {
+         "columnNames" : "name,supp_code",
+         "relationshipNames" : "country",
+         "relationshipDisplayNames" : [{"name" : "country", "value" : "location"}],
+         "tableName" : "supplier",
+         "tableType" : "Crud"
+      },
+      {
+         "columnNames" : "name,description",
+         "columnDisplayNames" : [{"name": "name", "value": "sow_code"}],
+         "tableName" : "sow",
+         "tableType" : "Crud"
+      },
+      {
+         "columnNames" : "name,country_code",
+         "tableName" : "country",
+         "tableType" : "Crud"
+      },
+      {
+         "columnNames" : "name,emp_code",
+         "tableName" : "team_member",
+         "tableType" : "Crud"
+      },
+      {
+         "columnNames" : "citizenship_date",
+         "relationshipNames" : "project,supplier,country",
+         "relationshipDisplayNames" : [{"name" : "country", "value" : "citizen"}],
+         "tableName" : "project_rule_lookup",
+         "tableType" : "Rule"
+      },
+      {
+         "columnNames" : "citizenship_date",
+         "relationshipNames" : "team_member,country",
+         "relationshipDisplayNames" : [{"name" : "country", "value" : "citizen"}],
+         "tableName" : "citizenship_rule_lookup",
+         "tableType" : "Rule"
+      }]
+}

@@ -2,6 +2,7 @@ package com.formbuilder;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import lombok.val;
@@ -13,6 +14,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.formbuilder.dto.FormInformation;
 import com.formbuilder.dto.Node;
+import com.formbuilder.dto.QuickFormInformation;
 
 public class Utils {
 	private static Logger logger = Logger.getLogger(Utils.class);
@@ -154,5 +156,10 @@ public class Utils {
 		default:
 			break;
 		}
+	}
+
+	public static List<FormInformation> convertToFormInformation(QuickFormInformation quickFormInformation) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
