@@ -23,8 +23,8 @@ import com.formbuilder.dto.TableDetail;
 public class Utils {
 	private static Logger logger = Logger.getLogger(Utils.class);
 
-	public static Map<String, Object> convertAttributeToUi(FormInformation root, boolean preview) throws JsonParseException,
-			JsonMappingException, IOException {
+	public static Map<String, Object> convertAttributeToUi(FormInformation root, boolean preview)
+			throws JsonParseException, JsonMappingException, IOException {
 		// TODO Auto-generated method stub
 
 		val map = new LinkedHashMap<String, Object>();
@@ -60,16 +60,16 @@ public class Utils {
 		addGenericInfo(node, parentOptId, map);
 
 		if (isNotACompositeItem(node)) {
-			addDatatypeAttributes(node, map);
+			addDatatypeAttributes(node, parentOptId, map);
 		} else {
 			if (childrenPresent(node)) {
-				addChildrenAttributes(node, map);
+				addChildrenAttributes(node, parentOptId, map);
 			}
 		}
 		return map;
 	}
 
-	private static void addChildrenAttributes(Node node, Map<String, Object> map) {
+	private static void addChildrenAttributes(Node node, String parentOptId, Map<String, Object> map) {
 		val map1 = new LinkedHashMap<String, Object>();
 
 		int cnt = node.getChildren().size();
@@ -78,7 +78,11 @@ public class Utils {
 			curretParentOptId = addSelectionForTheGroup(node, map1, cnt);
 		}
 		for (Node n : node.getChildren()) {
-			map1.put(n.getId() + "-fieldset", getUiInfo(n, curretParentOptId));
+			if (!parentOptId.isEmpty()) {
+				map1.put(n.getId() + "-fieldset", getUiInfo(n, curretParentOptId));
+			} else {
+				map1.put(n.getId(), getUiInfo(n, curretParentOptId));
+			}
 		}
 		map.put("fields", map1);
 	}
@@ -116,11 +120,11 @@ public class Utils {
 		return !node.getDatatype().startsWith("Composite");
 	}
 
-	private static void addDatatypeAttributes(Node node, Map<String, Object> map) {
+	private static void addDatatypeAttributes(Node node, String parentOptId, Map<String, Object> map) {
 		val map1 = new LinkedHashMap<String, Object>();
 		map1.put("type", node.getDatatype());
 
-		addAdditionalRules(node, map1, node.getId() + "-control");
+		addAdditionalRules(node, map1);
 		val map2 = new LinkedHashMap<String, Object>();
 		map2.put(node.getId(), map1);
 		map.put("fields", map2);
@@ -134,7 +138,7 @@ public class Utils {
 		}
 	}
 
-	private static void addAdditionalRules(Node node, Map<String, Object> map, String id) {
+	private static void addAdditionalRules(Node node, Map<String, Object> map) {
 		switch (node.getDatatype()) {
 		case "number":
 			map.put("minValue", node.getLowerbound());
@@ -163,7 +167,8 @@ public class Utils {
 	}
 
 	public static List<FormInformation> convertToFormInformation(QuickFormInformation quickFormInformation) {
-		return quickFormInformation.getTableDetails().stream().map(x -> getFormInformation(quickFormInformation.getApplicationName(), x))
+		return quickFormInformation.getTableDetails().stream()
+				.map(x -> getFormInformation(quickFormInformation.getApplicationName(), x))
 				.collect(Collectors.toList());
 	}
 
@@ -177,7 +182,7 @@ public class Utils {
 		Node rootnode = new Node();
 		rootnode.setId(x.getTableName());
 		rootnode.setDatatype("Composite-selectall");
-		rootnode.setLabel(getDisplayName(x.getTableName()));
+		rootnode.setLabel(getDisplayName(x.getTableName()).trim());
 
 		List<Node> children = new ArrayList<Node>();
 
@@ -195,10 +200,10 @@ public class Utils {
 			for (String relationshipName : x.getRelationshipNames().split(",")) {
 				// TODO Display dropdown
 				Node child = new Node();
-
-				child.setId(relationshipName + "_id");
+				String columnNameForRelationship = getColumnNameForRelationship(relationshipName, x);
+				child.setId(columnNameForRelationship);
 				child.setDatatype("select");
-				child.setLabel(getDisplayName(relationshipName, x));
+				child.setLabel(getColumnDisplayNameForRelationship(columnNameForRelationship));
 
 				children.add(child);
 			}
@@ -208,6 +213,32 @@ public class Utils {
 		formData.setRootnode(rootnode);
 
 		return formData;
+	}
+
+	private static String getColumnDisplayNameForRelationship(String columnNameForRelationship) {
+		String[] split = columnNameForRelationship.split("__");
+
+		String tabName = getDisplayName(split[0]).trim();
+		if (split.length == 2) {
+			String temp = getDisplayName(split[1]).trim();
+			String part2 = temp.substring(0, temp.length() - 3);
+			return tabName + " " + part2;
+		} else {
+			return tabName.substring(0, tabName.length() - 3);
+		}
+	}
+
+	private static String getColumnNameForRelationship(String relationshipName, TableDetail tableDetail) {
+		String displayName = "";
+		if (tableDetail.getRelationshipDisplayNames() != null) {
+			Optional<String> opt = tableDetail.getRelationshipDisplayNames().stream()
+					.filter(x -> x.getName().equals(relationshipName)).map(x -> x.getValue()).findAny();
+
+			if (opt.isPresent()) {
+				displayName = "__" + opt.get();
+			}
+		}
+		return relationshipName + displayName + "_id";
 	}
 
 	private static String getDataType(String columnName) {
@@ -223,14 +254,14 @@ public class Utils {
 
 	private static String getDisplayName(String name, TableDetail tableDetail) {
 		if (tableDetail.getColumnDisplayNames() != null) {
-			Optional<String> opt = tableDetail.getColumnDisplayNames().stream().filter(x -> x.getName() == name).map(x -> x.getValue())
-					.findAny();
+			Optional<String> opt = tableDetail.getColumnDisplayNames().stream().filter(x -> x.getName().equals(name))
+					.map(x -> x.getValue()).findAny();
 
 			if (opt.isPresent()) {
-				return opt.get();
+				return getDisplayName(opt.get()).trim();
 			}
 		}
-		return getDisplayName(name);
+		return getDisplayName(name).trim();
 	}
 
 	private static String getDisplayName(String name) {
@@ -249,5 +280,4 @@ public class Utils {
 
 		return res.toString();
 	}
-
 }

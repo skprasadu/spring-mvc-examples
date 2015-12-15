@@ -5,30 +5,30 @@
          "columnDisplayNames" : [{"name" : "name", "value" : "project_code"}],
          "ruleDetails" : [{"name" : "assertIfAllPresent", "value" : "{\"input\":\"name, project_type, start_date, end_date\"}"}],
          "tableName" : "project",
-         "tableType" : "Crud"
+         "tableType" : "Form"
       },
       {
          "columnNames" : "name,supp_code",
          "relationshipNames" : "country",
          "relationshipDisplayNames" : [{"name" : "country", "value" : "location"}],
          "tableName" : "supplier",
-         "tableType" : "Crud"
+         "tableType" : "Form"
       },
       {
          "columnNames" : "name,description",
          "columnDisplayNames" : [{"name": "name", "value": "sow_code"}],
          "tableName" : "sow",
-         "tableType" : "Crud"
+         "tableType" : "Form"
       },
       {
          "columnNames" : "name,country_code",
          "tableName" : "country",
-         "tableType" : "Crud"
+         "tableType" : "Form"
       },
       {
          "columnNames" : "name,emp_code",
          "tableName" : "team_member",
-         "tableType" : "Crud"
+         "tableType" : "Form"
       },
       {
          "columnNames" : "citizenship_date",

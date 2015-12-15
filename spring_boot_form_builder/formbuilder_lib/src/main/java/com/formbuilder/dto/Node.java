@@ -2,25 +2,18 @@ package com.formbuilder.dto;
 
 import java.util.List;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import lombok.Data;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Data
 public class Node {
-	@Getter @Setter
 	private String datatype;
-	@Getter @Setter
 	private String id;
-	@Getter @Setter
 	private String label;
-	@Getter @Setter
 	private int lowerbound;
-	@Getter @Setter
 	private int upperbound;
-	@Getter @Setter
 	private String val;
-	@Getter @Setter
 	private List<Node> children;
 }

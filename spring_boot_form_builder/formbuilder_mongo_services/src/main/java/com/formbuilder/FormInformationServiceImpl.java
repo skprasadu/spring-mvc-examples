@@ -1,13 +1,15 @@
 package com.formbuilder;
 
+import static com.formbuilder.Utils.combineFormDataAndInput;
+import static com.formbuilder.Utils.convertAttributeToUi;
+import static com.formbuilder.Utils.convertToFormInformation;
+
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
-
-import lombok.val;
 
 import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
@@ -21,7 +23,8 @@ import com.formbuilder.dto.FormInformation;
 import com.formbuilder.dto.QuickFormInformation;
 import com.formbuilder.dto.UiForm;
 import com.google.common.collect.ImmutableMap;
-import static com.formbuilder.Utils.*;
+
+import lombok.val;
 
 @Service
 public class FormInformationServiceImpl implements FormInformationService {
@@ -32,7 +35,8 @@ public class FormInformationServiceImpl implements FormInformationService {
 	private final UiRuleValidatorServiceImpl uiRuleValidatorService;
 
 	@Autowired
-	public FormInformationServiceImpl(FormInformationRepository repository, UiRuleValidatorServiceImpl uiRuleValidatorService) {
+	public FormInformationServiceImpl(FormInformationRepository repository,
+			UiRuleValidatorServiceImpl uiRuleValidatorService) {
 		this.repository = repository;
 		this.uiRuleValidatorService = uiRuleValidatorService;
 	}
@@ -55,10 +59,10 @@ public class FormInformationServiceImpl implements FormInformationService {
 	@Override
 	public List<Map> findAllFormTemplates(String appName) throws Exception {
 		val i = new AtomicInteger();
-		return repository
-				.findAllFormTemplates(appName)
-				.map(x -> new UiForm(x.getRootnode().getId(), x.getRootnode().getId(), x.getRootnode().getLabel(), i.incrementAndGet(), x
-						.getRootnode().getLabel(), x.getEntryType())).collect(Collectors.groupingBy(UiForm::getGroupBy)).entrySet().stream()
+		return repository.findAllFormTemplates(appName)
+				.map(x -> new UiForm(x.getRootnode().getId(), x.getRootnode().getId(), x.getRootnode().getLabel(),
+						i.incrementAndGet(), x.getRootnode().getLabel(), x.getEntryType()))
+				.collect(Collectors.groupingBy(UiForm::getGroupBy)).entrySet().stream()
 				.map(x -> ImmutableMap.of("group", x.getKey(), "tableList", x.getValue())).collect(Collectors.toList());
 	}
 
@@ -75,7 +79,8 @@ public class FormInformationServiceImpl implements FormInformationService {
 		uiRuleValidatorService.setFormId(formId);
 		val rvo = uiRuleValidatorService.validate(uiRuleValidatorService.getRules());
 		if (UiRuleValidatorService.success(rvo)) {
-			val formTemplate = dataId.equals("0") ? findTemplateByName(appName, formId) : repository.findFormData(appName, formId, dataId);
+			val formTemplate = dataId.equals("0") ? findTemplateByName(appName, formId)
+					: repository.findFormData(appName, formId, dataId);
 
 			logger.debug("input" + input.toJSONString());
 			if (dataId.equals("0")) {
@@ -95,8 +100,8 @@ public class FormInformationServiceImpl implements FormInformationService {
 	@Override
 	public void saveForm(FormInformation formInformation, String appName, String formId) throws Exception {
 		if (formId.equals("0")) {
-			FormInformation formInformation1 = repository.findTemplateByName(formInformation.getApplication(), formInformation.getRootnode()
-					.getId());
+			FormInformation formInformation1 = repository.findTemplateByName(formInformation.getApplication(),
+					formInformation.getRootnode().getId());
 
 			if (formInformation1 != null) {
 				throw new Exception("Form with same name exists");
@@ -112,11 +117,11 @@ public class FormInformationServiceImpl implements FormInformationService {
 	 * java.lang.String)
 	 */
 	@Override
-	public Map<String, Object> getData(String appName, String formName, String dataid) throws JsonParseException, JsonMappingException,
-			IOException {
+	public Map<String, Object> getData(String appName, String formName, String dataid)
+			throws JsonParseException, JsonMappingException, IOException {
 		logger.debug("****appName=" + appName + " formName=" + formName + " dataid=" + dataid);
-		val root = dataid.trim().equals("0") ? findTemplateByName(appName.trim(), formName.trim()) : repository.findFormData(appName.trim(),
-				formName.trim(), dataid.trim());
+		val root = dataid.trim().equals("0") ? findTemplateByName(appName.trim(), formName.trim())
+				: repository.findFormData(appName.trim(), formName.trim(), dataid.trim());
 		logger.debug("getData root=" + root);
 		val map = convertAttributeToUi(root, false);
 		logger.debug("getData map=" + map);
@@ -127,9 +132,8 @@ public class FormInformationServiceImpl implements FormInformationService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.formbuilder.FormInformationService#findAllDataByNames(java.lang.String
-	 * )
+	 * @see com.formbuilder.FormInformationService#findAllDataByNames(java.lang.
+	 * String )
 	 */
 	@Override
 	public LinkedHashMap findAllDataByNames(String appName, String formName) {
@@ -177,7 +181,8 @@ public class FormInformationServiceImpl implements FormInformationService {
 	}
 
 	@Override
-	public Map<String, Object> getFormPreviewData(String appName, String formName) throws JsonParseException, JsonMappingException, IOException {
+	public Map<String, Object> getFormPreviewData(String appName, String formName)
+			throws JsonParseException, JsonMappingException, IOException {
 		val root = findTemplateByName(appName.trim(), formName.trim());
 		val map = convertAttributeToUi(root, true);
 
@@ -186,20 +191,17 @@ public class FormInformationServiceImpl implements FormInformationService {
 
 	@Override
 	public Map<String, Object> getQuickCreateDesignOfForms(String appName) {
-		// TODO Auto-generated method stub
-		//{"fuelload":{"label":"Fuel Load","type":"fieldset","fields":{"load-fieldset":{"label":"Load","type":"fieldset","fields":{"load":{"type":"number","minValue":0,"maxValue":0,"placeholder":"Numeric Value"}}}}}}
-		
 		val map1 = new LinkedHashMap<String, String>();
 		map1.put("type", "textarea");
 		map1.put("label", "Quick Data Entry");
 		val map2 = new LinkedHashMap<String, Object>();
 		map2.put("quickdata", map1);
-		
+
 		val map3 = new LinkedHashMap<String, Object>();
 		map3.put("fields", map2);
 		map3.put("label", "Quick Data Entry Form");
 		map3.put("type", "fieldset");
-		
+
 		val map4 = new LinkedHashMap<String, Object>();
 		map4.put("quickdata", map3);
 		val map5 = new LinkedHashMap<String, Object>();
@@ -211,13 +213,16 @@ public class FormInformationServiceImpl implements FormInformationService {
 	}
 
 	@Override
-	public void saveQuickDesignOfForm(JSONObject input, String appName) throws JsonParseException, JsonMappingException, IOException {
+	public void saveQuickDesignOfForm(JSONObject input, String appName) throws Exception {
 		// TODO Auto-generated method stub
 		val mapper = new ObjectMapper();
-		String quickData = (String)input.get("quickdata");
+		String quickData = (String) input.get("quickdata");
 		val quickFormInformation = mapper.readValue(quickData, QuickFormInformation.class);
-		
+
 		val list = convertToFormInformation(quickFormInformation);
 		logger.debug(list);
+		for (FormInformation formInformation : list) {
+			saveForm(formInformation, appName, "0");
+		}
 	}
 }
