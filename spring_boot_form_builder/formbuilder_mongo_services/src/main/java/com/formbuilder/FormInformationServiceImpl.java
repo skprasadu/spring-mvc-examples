@@ -217,7 +217,7 @@ public class FormInformationServiceImpl implements FormInformationService {
 		String quickData = (String)input.get("quickdata");
 		val quickFormInformation = mapper.readValue(quickData, QuickFormInformation.class);
 		
-		logger.debug(quickFormInformation);
 		val list = convertToFormInformation(quickFormInformation);
+		logger.debug(list);
 	}
 }

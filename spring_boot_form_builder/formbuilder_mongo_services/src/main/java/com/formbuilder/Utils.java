@@ -1,9 +1,12 @@
 package com.formbuilder;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import lombok.val;
 
@@ -15,6 +18,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.formbuilder.dto.FormInformation;
 import com.formbuilder.dto.Node;
 import com.formbuilder.dto.QuickFormInformation;
+import com.formbuilder.dto.TableDetail;
 
 public class Utils {
 	private static Logger logger = Logger.getLogger(Utils.class);
@@ -159,7 +163,91 @@ public class Utils {
 	}
 
 	public static List<FormInformation> convertToFormInformation(QuickFormInformation quickFormInformation) {
-		// TODO Auto-generated method stub
-		return null;
+		return quickFormInformation.getTableDetails().stream().map(x -> getFormInformation(quickFormInformation.getApplicationName(), x))
+				.collect(Collectors.toList());
 	}
+
+	private static FormInformation getFormInformation(String applicationName, TableDetail x) {
+		FormInformation formData = new FormInformation();
+
+		formData.setApplication(applicationName);
+		formData.setEntryType(x.getTableType());
+		formData.setType("template");
+
+		Node rootnode = new Node();
+		rootnode.setId(x.getTableName());
+		rootnode.setDatatype("Composite-selectall");
+		rootnode.setLabel(getDisplayName(x.getTableName()));
+
+		List<Node> children = new ArrayList<Node>();
+
+		for (String columnName : x.getColumnNames().split(",")) {
+			Node child = new Node();
+
+			child.setId(columnName);
+			child.setDatatype(getDataType(columnName));
+			child.setLabel(getDisplayName(columnName, x));
+
+			children.add(child);
+		}
+
+		if (x.getRelationshipNames() != null) {
+			for (String relationshipName : x.getRelationshipNames().split(",")) {
+				// TODO Display dropdown
+				Node child = new Node();
+
+				child.setId(relationshipName + "_id");
+				child.setDatatype("select");
+				child.setLabel(getDisplayName(relationshipName, x));
+
+				children.add(child);
+			}
+		}
+		rootnode.setChildren(children);
+
+		formData.setRootnode(rootnode);
+
+		return formData;
+	}
+
+	private static String getDataType(String columnName) {
+		// TODO Auto-generated method stub
+		if (columnName.endsWith("date")) {
+			return "date";
+		} else if (columnName.endsWith("id")) {
+			return "number";
+		} else {
+			return "text";
+		}
+	}
+
+	private static String getDisplayName(String name, TableDetail tableDetail) {
+		if (tableDetail.getColumnDisplayNames() != null) {
+			Optional<String> opt = tableDetail.getColumnDisplayNames().stream().filter(x -> x.getName() == name).map(x -> x.getValue())
+					.findAny();
+
+			if (opt.isPresent()) {
+				return opt.get();
+			}
+		}
+		return getDisplayName(name);
+	}
+
+	private static String getDisplayName(String name) {
+		// TODO Auto-generated method stub
+		val split = name.split("_");
+		val res = new StringBuffer();
+
+		for (String str : split) {
+			char[] stringArray = str.trim().toCharArray();
+			if (stringArray.length > 0) {
+				stringArray[0] = Character.toUpperCase(stringArray[0]);
+				str = new String(stringArray);
+			}
+			res.append(str).append(" ");
+		}
+
+		return res.toString();
+	}
+
 }
