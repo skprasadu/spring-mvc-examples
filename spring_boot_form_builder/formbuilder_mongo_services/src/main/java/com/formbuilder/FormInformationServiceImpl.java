@@ -1,15 +1,13 @@
 package com.formbuilder;
 
-import static com.formbuilder.Utils.combineFormDataAndInput;
-import static com.formbuilder.Utils.convertAttributeToUi;
-import static com.formbuilder.Utils.convertToFormInformation;
-
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+
+import lombok.val;
 
 import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
@@ -24,8 +22,6 @@ import com.formbuilder.dto.QuickFormInformation;
 import com.formbuilder.dto.UiForm;
 import com.google.common.collect.ImmutableMap;
 
-import lombok.val;
-
 @Service
 public class FormInformationServiceImpl implements FormInformationService {
 
@@ -33,12 +29,14 @@ public class FormInformationServiceImpl implements FormInformationService {
 
 	private final FormInformationRepository repository;
 	private final UiRuleValidatorServiceImpl uiRuleValidatorService;
+	private final DynamicUiService dynamicUiService;
 
 	@Autowired
 	public FormInformationServiceImpl(FormInformationRepository repository,
-			UiRuleValidatorServiceImpl uiRuleValidatorService) {
+			UiRuleValidatorServiceImpl uiRuleValidatorService, DynamicUiService dynamicUiService) {
 		this.repository = repository;
 		this.uiRuleValidatorService = uiRuleValidatorService;
+		this.dynamicUiService = dynamicUiService;
 	}
 
 	/*
@@ -88,7 +86,7 @@ public class FormInformationServiceImpl implements FormInformationService {
 				formTemplate.setType("data");
 			}
 			// combine formTemplate and input
-			combineFormDataAndInput(formTemplate, input);
+			dynamicUiService.combineFormDataAndInput(formTemplate, input);
 			formTemplate.setApplication(appName);
 			repository.save(formTemplate);
 		}
@@ -123,7 +121,7 @@ public class FormInformationServiceImpl implements FormInformationService {
 		val root = dataid.trim().equals("0") ? findTemplateByName(appName.trim(), formName.trim())
 				: repository.findFormData(appName.trim(), formName.trim(), dataid.trim());
 		logger.debug("getData root=" + root);
-		val map = convertAttributeToUi(root, false);
+		val map = dynamicUiService.convertAttributeToUi(root, false);
 		logger.debug("getData map=" + map);
 
 		return map;
@@ -184,7 +182,7 @@ public class FormInformationServiceImpl implements FormInformationService {
 	public Map<String, Object> getFormPreviewData(String appName, String formName)
 			throws JsonParseException, JsonMappingException, IOException {
 		val root = findTemplateByName(appName.trim(), formName.trim());
-		val map = convertAttributeToUi(root, true);
+		val map = dynamicUiService.convertAttributeToUi(root, true);
 
 		return map;
 	}
@@ -219,7 +217,7 @@ public class FormInformationServiceImpl implements FormInformationService {
 		String quickData = (String) input.get("quickdata");
 		val quickFormInformation = mapper.readValue(quickData, QuickFormInformation.class);
 
-		val list = convertToFormInformation(quickFormInformation);
+		val list = dynamicUiService.convertToFormInformation(quickFormInformation);
 		logger.debug(list);
 		for (FormInformation formInformation : list) {
 			saveForm(formInformation, appName, "0");

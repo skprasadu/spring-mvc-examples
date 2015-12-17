@@ -21,4 +21,8 @@ public interface FormInformationRepository extends MongoRepository<FormInformati
 	
 	@Query(value = "{\"type\": \"data\", \"application\": ?0, \"rootnode._id\" : ?1, \"_id\": ?2}, {\"_id\":1, \"rootnode.id\" : 1 }")
 	FormInformation findFormData(String appName, String formName, String id);
+	
+	//TODO: need to implement this
+	@Query(value = "{\"type\": \"data\", \"application\": ?0, \"rootnode._id\" : ?1, \"rootnode.children._id\": \"name\"}, { \"rootnode.children.val\": 1, \"rootnode.children.label\": 1, \"_id\": 1 }")
+	Stream<FormInformation> findAllFormDataByName(String appName, String formName);
 }

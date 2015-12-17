@@ -12,6 +12,8 @@ import lombok.val;
 
 import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -19,18 +21,28 @@ import com.formbuilder.dto.FormInformation;
 import com.formbuilder.dto.Node;
 import com.formbuilder.dto.QuickFormInformation;
 import com.formbuilder.dto.TableDetail;
+import com.formbuilder.dto.ListInformation;
 
-public class Utils {
-	private static Logger logger = Logger.getLogger(Utils.class);
+@Service
+public class DynamicUiService {
+	
+	private static Logger logger = Logger.getLogger(DynamicUiService.class);
 
-	public static Map<String, Object> convertAttributeToUi(FormInformation root, boolean preview)
+	private FormInformationRepository repository;
+	
+	@Autowired
+	public DynamicUiService(FormInformationRepository repository) {
+		this.repository = repository;
+	}
+
+	public Map<String, Object> convertAttributeToUi(FormInformation root, boolean preview)
 			throws JsonParseException, JsonMappingException, IOException {
 		// TODO Auto-generated method stub
-
+		logger.debug("in convertAttributeToUi=" + repository);
 		val map = new LinkedHashMap<String, Object>();
 		val map1 = new LinkedHashMap<String, Object>();
 		Node node = root.getRootnode();
-		map.put(node.getId(), getUiInfo(node, ""));
+		map.put(node.getId(), getUiInfo(node, root.getApplication(), ""));
 		if (!preview) {
 			map1.put("type", "submit");
 			map1.put("label", "Submit");
@@ -38,38 +50,31 @@ public class Utils {
 		}
 		return map;
 	}
-
-	public static void combineFormDataAndInput(FormInformation formTemplate, JSONObject input) {
-		combineFormDataAndInput(formTemplate.getRootnode(), input);
-	}
-
-	private static void combineFormDataAndInput(Node node, JSONObject input) {
-		Object oVal = input.get(node.getId());
-		if (oVal != null) {
-			node.setVal(oVal.toString());
-		}
-
-		if (node.getChildren() != null) {
-			node.getChildren().forEach(x -> combineFormDataAndInput(x, input));
-		}
-	}
-
-	private static Map<String, Object> getUiInfo(Node node, String parentOptId) {
+	
+	private Map<String, Object> getUiInfo(Node node, String appName, String parentOptId) {
 
 		val map = new LinkedHashMap<String, Object>();
 		addGenericInfo(node, parentOptId, map);
 
-		if (isNotACompositeItem(node)) {
-			addDatatypeAttributes(node, parentOptId, map);
+		if (compositeItem(node) && childrenPresent(node)) {
+			addChildrenAttributes(node, appName, map);
 		} else {
-			if (childrenPresent(node)) {
-				addChildrenAttributes(node, parentOptId, map);
+			if (parentCompositeSingle(parentOptId)) {
+				addDatatypeAttributes(node, appName, map);
+			} else {
+				map.put("label", node.getLabel());
+				map.put("type", node.getDatatype());
+				addAdditionalRules(node, appName, map);
 			}
 		}
 		return map;
 	}
 
-	private static void addChildrenAttributes(Node node, String parentOptId, Map<String, Object> map) {
+	private boolean parentCompositeSingle(String parentOptId) {
+		return !parentOptId.isEmpty();
+	}
+
+	private void addChildrenAttributes(Node node, String appName, Map<String, Object> map) {
 		val map1 = new LinkedHashMap<String, Object>();
 
 		int cnt = node.getChildren().size();
@@ -78,20 +83,20 @@ public class Utils {
 			curretParentOptId = addSelectionForTheGroup(node, map1, cnt);
 		}
 		for (Node n : node.getChildren()) {
-			if (!parentOptId.isEmpty()) {
-				map1.put(n.getId() + "-fieldset", getUiInfo(n, curretParentOptId));
+			if (!curretParentOptId.isEmpty()) {
+				map1.put(n.getId() + "-fieldset", getUiInfo(n, appName, curretParentOptId));
 			} else {
-				map1.put(n.getId(), getUiInfo(n, curretParentOptId));
+				map1.put(n.getId(), getUiInfo(n, appName, curretParentOptId));
 			}
 		}
 		map.put("fields", map1);
 	}
 
-	private static boolean childrenPresent(Node node) {
+	private boolean childrenPresent(Node node) {
 		return node.getChildren() != null && !node.getChildren().isEmpty();
 	}
 
-	private static String addSelectionForTheGroup(Node node, Map<String, Object> map, int cnt) {
+	private String addSelectionForTheGroup(Node node, Map<String, Object> map, int cnt) {
 		String curretParentOptId;
 		curretParentOptId = node.getId() + "-opt";
 		val map3 = new LinkedHashMap<String, Object>();
@@ -106,31 +111,31 @@ public class Utils {
 		return curretParentOptId;
 	}
 
-	private static boolean isCompositeSelectsingle(Node node, int count) {
+	private boolean isCompositeSelectsingle(Node node, int count) {
 		return node.getDatatype().equals("Composite-selectsingle") && count > 1;
 	}
 
-	private static void addGenericInfo(Node node, String parentOptId, Map<String, Object> map) {
+	private void addGenericInfo(Node node, String parentOptId, Map<String, Object> map) {
 		map.put("label", node.getLabel());
 		addEnableDisableRule(node, parentOptId, map);
 		map.put("type", "fieldset");
 	}
 
-	private static boolean isNotACompositeItem(Node node) {
-		return !node.getDatatype().startsWith("Composite");
+	private boolean compositeItem(Node node) {
+		return node.getDatatype().startsWith("Composite");
 	}
 
-	private static void addDatatypeAttributes(Node node, String parentOptId, Map<String, Object> map) {
+	private void addDatatypeAttributes(Node node, String appName, Map<String, Object> map) {
 		val map1 = new LinkedHashMap<String, Object>();
 		map1.put("type", node.getDatatype());
 
-		addAdditionalRules(node, map1);
+		addAdditionalRules(node, appName, map1);
 		val map2 = new LinkedHashMap<String, Object>();
 		map2.put(node.getId(), map1);
 		map.put("fields", map2);
 	}
 
-	private static void addEnableDisableRule(Node node, String parentOptId, Map<String, Object> map) {
+	private void addEnableDisableRule(Node node, String parentOptId, Map<String, Object> map) {
 		if (!parentOptId.equals("")) {
 			val map1 = new LinkedHashMap<String, Object>();
 			map1.put("ng-disabled", "urlFormData['" + parentOptId + "'] != '" + node.getId() + "-opt'");
@@ -138,7 +143,7 @@ public class Utils {
 		}
 	}
 
-	private static void addAdditionalRules(Node node, Map<String, Object> map) {
+	private void addAdditionalRules(Node node, String appName, Map<String, Object> map) {
 		switch (node.getDatatype()) {
 		case "number":
 			map.put("minValue", node.getLowerbound());
@@ -161,18 +166,43 @@ public class Utils {
 				map.put("val", node.getVal());
 			}
 			break;
+		case "select":
+			// Added option information
+			logger.debug("node id=" + node);
+			String tableName = getTableName(node.getId());
+			logger.debug("tableName name=" + tableName);
+			val list = repository.findAllFormDataByName(appName, tableName);
+			
+			list.map(x -> new ListInformation(x.getId(), x.getRootnode().getChildren().get(0).getVal())).collect(Collectors.toList());
+			
+			break;
 		default:
 			break;
 		}
 	}
 
-	public static List<FormInformation> convertToFormInformation(QuickFormInformation quickFormInformation) {
-		return quickFormInformation.getTableDetails().stream()
-				.map(x -> getFormInformation(quickFormInformation.getApplicationName(), x))
+	
+	public void combineFormDataAndInput(FormInformation formTemplate, JSONObject input) {
+		combineFormDataAndInput(formTemplate.getRootnode(), input);
+	}
+	
+	private void combineFormDataAndInput(Node node, JSONObject input) {
+		Object oVal = input.get(node.getId());
+		if (oVal != null) {
+			node.setVal(oVal.toString());
+		}
+
+		if (node.getChildren() != null) {
+			node.getChildren().forEach(x -> combineFormDataAndInput(x, input));
+		}
+	}
+	
+	public List<FormInformation> convertToFormInformation(QuickFormInformation quickFormInformation) {
+		return quickFormInformation.getTableDetails().stream().map(x -> getFormInformation(quickFormInformation.getApplicationName(), x))
 				.collect(Collectors.toList());
 	}
-
-	private static FormInformation getFormInformation(String applicationName, TableDetail x) {
+	
+	private FormInformation getFormInformation(String applicationName, TableDetail x) {
 		FormInformation formData = new FormInformation();
 
 		formData.setApplication(applicationName);
@@ -215,7 +245,7 @@ public class Utils {
 		return formData;
 	}
 
-	private static String getColumnDisplayNameForRelationship(String columnNameForRelationship) {
+	private String getColumnDisplayNameForRelationship(String columnNameForRelationship) {
 		String[] split = columnNameForRelationship.split("__");
 
 		String tabName = getDisplayName(split[0]).trim();
@@ -228,11 +258,11 @@ public class Utils {
 		}
 	}
 
-	private static String getColumnNameForRelationship(String relationshipName, TableDetail tableDetail) {
+	private String getColumnNameForRelationship(String relationshipName, TableDetail tableDetail) {
 		String displayName = "";
 		if (tableDetail.getRelationshipDisplayNames() != null) {
-			Optional<String> opt = tableDetail.getRelationshipDisplayNames().stream()
-					.filter(x -> x.getName().equals(relationshipName)).map(x -> x.getValue()).findAny();
+			Optional<String> opt = tableDetail.getRelationshipDisplayNames().stream().filter(x -> x.getName().equals(relationshipName))
+					.map(x -> x.getValue()).findAny();
 
 			if (opt.isPresent()) {
 				displayName = "__" + opt.get();
@@ -241,7 +271,7 @@ public class Utils {
 		return relationshipName + displayName + "_id";
 	}
 
-	private static String getDataType(String columnName) {
+	private String getDataType(String columnName) {
 		// TODO Auto-generated method stub
 		if (columnName.endsWith("date")) {
 			return "date";
@@ -252,10 +282,10 @@ public class Utils {
 		}
 	}
 
-	private static String getDisplayName(String name, TableDetail tableDetail) {
+	private String getDisplayName(String name, TableDetail tableDetail) {
 		if (tableDetail.getColumnDisplayNames() != null) {
-			Optional<String> opt = tableDetail.getColumnDisplayNames().stream().filter(x -> x.getName().equals(name))
-					.map(x -> x.getValue()).findAny();
+			Optional<String> opt = tableDetail.getColumnDisplayNames().stream().filter(x -> x.getName().equals(name)).map(x -> x.getValue())
+					.findAny();
 
 			if (opt.isPresent()) {
 				return getDisplayName(opt.get()).trim();
@@ -264,7 +294,7 @@ public class Utils {
 		return getDisplayName(name).trim();
 	}
 
-	private static String getDisplayName(String name) {
+	private String getDisplayName(String name) {
 		// TODO Auto-generated method stub
 		val split = name.split("_");
 		val res = new StringBuffer();
@@ -279,5 +309,15 @@ public class Utils {
 		}
 
 		return res.toString();
+	}
+	
+	private String getTableName(String name) {
+		String[] split = name.split("__");
+		
+		String tabName = split[0];
+		if(split.length == 2){
+			tabName = split[1];
+		}
+		return tabName.substring(0,  tabName.length() -3);
 	}
 }

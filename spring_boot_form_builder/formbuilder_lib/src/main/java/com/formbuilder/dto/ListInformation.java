@@ -1,13 +1,11 @@
 package com.formbuilder.dto;
 
+import lombok.Data;
 import lombok.Getter;
-import lombok.experimental.Builder;
 
-@Builder
+@Data
 public class ListInformation {
-	@Getter
-	private String id;
+	private final String id;
 	
-	@Getter
-	private String name;
+	private final String name;
 }
