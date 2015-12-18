@@ -34,8 +34,7 @@ import com.formbuilder.service.UiRuleValidatorServiceImpl;
 public class UiFormDaoImpl implements UiFormDao {
 	private static Logger logger = Logger.getLogger(UiFormDaoImpl.class);
 	private JdbcTemplate jdbcTemplate;
-	SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
-	String flows[] = { "flow_5.4", "flow_5.5", "flow_5.6" };
+	private SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
 
 	@Autowired
 	public UiFormDaoImpl(JdbcTemplate jdbcTemplate) {

@@ -2,6 +2,7 @@ package com.formbuilder;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,14 +23,15 @@ import com.formbuilder.dto.Node;
 import com.formbuilder.dto.QuickFormInformation;
 import com.formbuilder.dto.TableDetail;
 import com.formbuilder.dto.ListInformation;
+import static com.google.common.collect.ImmutableMap.of;
 
 @Service
 public class DynamicUiService {
-	
+
 	private static Logger logger = Logger.getLogger(DynamicUiService.class);
 
 	private FormInformationRepository repository;
-	
+
 	@Autowired
 	public DynamicUiService(FormInformationRepository repository) {
 		this.repository = repository;
@@ -50,7 +52,7 @@ public class DynamicUiService {
 		}
 		return map;
 	}
-	
+
 	private Map<String, Object> getUiInfo(Node node, String appName, String parentOptId) {
 
 		val map = new LinkedHashMap<String, Object>();
@@ -169,23 +171,25 @@ public class DynamicUiService {
 		case "select":
 			// Added option information
 			logger.debug("node id=" + node);
+			logger.debug("node id=" + node.getId());
 			String tableName = getTableName(node.getId());
 			logger.debug("tableName name=" + tableName);
-			val list = repository.findAllFormDataByName(appName, tableName);
-			
-			list.map(x -> new ListInformation(x.getId(), x.getRootnode().getChildren().get(0).getVal())).collect(Collectors.toList());
-			
+
+			map.put("options",
+					repository.findAllFormDataByName(appName, tableName)
+							.map(x -> new ListInformation(x.getId(), x.getRootnode().getChildren().get(0).getVal()))
+							.collect(Collectors.toMap(ListInformation::getId, p -> of("label", p.getName()))));
+
 			break;
 		default:
 			break;
 		}
 	}
 
-	
 	public void combineFormDataAndInput(FormInformation formTemplate, JSONObject input) {
 		combineFormDataAndInput(formTemplate.getRootnode(), input);
 	}
-	
+
 	private void combineFormDataAndInput(Node node, JSONObject input) {
 		Object oVal = input.get(node.getId());
 		if (oVal != null) {
@@ -196,12 +200,13 @@ public class DynamicUiService {
 			node.getChildren().forEach(x -> combineFormDataAndInput(x, input));
 		}
 	}
-	
+
 	public List<FormInformation> convertToFormInformation(QuickFormInformation quickFormInformation) {
-		return quickFormInformation.getTableDetails().stream().map(x -> getFormInformation(quickFormInformation.getApplicationName(), x))
+		return quickFormInformation.getTableDetails().stream()
+				.map(x -> getFormInformation(quickFormInformation.getApplicationName(), x))
 				.collect(Collectors.toList());
 	}
-	
+
 	private FormInformation getFormInformation(String applicationName, TableDetail x) {
 		FormInformation formData = new FormInformation();
 
@@ -261,14 +266,14 @@ public class DynamicUiService {
 	private String getColumnNameForRelationship(String relationshipName, TableDetail tableDetail) {
 		String displayName = "";
 		if (tableDetail.getRelationshipDisplayNames() != null) {
-			Optional<String> opt = tableDetail.getRelationshipDisplayNames().stream().filter(x -> x.getName().equals(relationshipName))
-					.map(x -> x.getValue()).findAny();
+			Optional<String> opt = tableDetail.getRelationshipDisplayNames().stream()
+					.filter(x -> x.getName().equals(relationshipName)).map(x -> x.getValue()).findAny();
 
 			if (opt.isPresent()) {
-				displayName = "__" + opt.get();
+				displayName = opt.get() + "__";
 			}
 		}
-		return relationshipName + displayName + "_id";
+		return displayName + relationshipName + "_id";
 	}
 
 	private String getDataType(String columnName) {
@@ -284,8 +289,8 @@ public class DynamicUiService {
 
 	private String getDisplayName(String name, TableDetail tableDetail) {
 		if (tableDetail.getColumnDisplayNames() != null) {
-			Optional<String> opt = tableDetail.getColumnDisplayNames().stream().filter(x -> x.getName().equals(name)).map(x -> x.getValue())
-					.findAny();
+			Optional<String> opt = tableDetail.getColumnDisplayNames().stream().filter(x -> x.getName().equals(name))
+					.map(x -> x.getValue()).findAny();
 
 			if (opt.isPresent()) {
 				return getDisplayName(opt.get()).trim();
@@ -310,14 +315,14 @@ public class DynamicUiService {
 
 		return res.toString();
 	}
-	
+
 	private String getTableName(String name) {
 		String[] split = name.split("__");
-		
+
 		String tabName = split[0];
-		if(split.length == 2){
+		if (split.length == 2) {
 			tabName = split[1];
 		}
-		return tabName.substring(0,  tabName.length() -3);
+		return tabName.substring(0, tabName.length() - 3);
 	}
 }
