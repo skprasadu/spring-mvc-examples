@@ -1,0 +1,18 @@
+package com.formbuilder.drools
+
+import java.util.Map
+import java.util.List
+
+rule "citizenship date assert" when
+    $map: Map(this["citizenship_date"].equals(''))
+    $list: List()
+then
+    $list.add("Date cannot be empty");
+end
+
+rule "country is US" when
+    $map: Map(this["country"] != null && this["country"].equals('US') )
+    $list: List()
+then
+    $list.add("Date can be empty if US");
+end

@@ -1,8 +1,9 @@
 package com.formbuilder;
 
+import static com.google.common.collect.ImmutableMap.of;
+
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,11 +20,10 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.formbuilder.dto.FormInformation;
+import com.formbuilder.dto.ListInformation;
 import com.formbuilder.dto.Node;
 import com.formbuilder.dto.QuickFormInformation;
 import com.formbuilder.dto.TableDetail;
-import com.formbuilder.dto.ListInformation;
-import static com.google.common.collect.ImmutableMap.of;
 
 @Service
 public class DynamicUiService {
@@ -246,6 +246,7 @@ public class DynamicUiService {
 		rootnode.setChildren(children);
 
 		formData.setRootnode(rootnode);
+		formData.setRuleDetails(x.getRuleDetails());
 
 		return formData;
 	}

@@ -10,6 +10,7 @@ public class TableDetail {
 	private List<NameValue> columnDisplayNames; 
 	private String relationshipNames;
 	private List<NameValue> relationshipDisplayNames;
+	private List<NameValue> relationshipType;
 	private List<NameValue> ruleDetails; 
 	private String tableName;
 	private String tableType;	

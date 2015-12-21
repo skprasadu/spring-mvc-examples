@@ -16,6 +16,7 @@
 	
 	<properties>
 		<DS>h2</DS>
+		<jbpm.version>6.3.0.Final</jbpm.version>
 	</properties>
 	
 	<dependencies>
@@ -68,8 +69,23 @@
 		</dependency>
 		<dependency>
 			<groupId>com.formbuilder</groupId>
-			<artifactId>formbuilder_mongo</artifactId>
+			<artifactId>formbuilder_${DS}</artifactId>
 			<version>0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.drools</groupId>
+			<artifactId>drools-compiler</artifactId>
+			<version>${jbpm.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.drools</groupId>
+			<artifactId>named-kiesession</artifactId>
+			<version>${jbpm.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.kie</groupId>
+			<artifactId>kie-api</artifactId>
+			<version>${jbpm.version}</version>
 		</dependency>
 		
 	</dependencies>

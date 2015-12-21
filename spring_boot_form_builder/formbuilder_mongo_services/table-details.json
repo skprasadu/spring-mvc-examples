@@ -11,6 +11,7 @@
          "columnNames" : "name,supp_code",
          "relationshipNames" : "country",
          "relationshipDisplayNames" : [{"name" : "country", "value" : "location"}],
+         "relationshipType" : [{"name" : "country", "value" : "multi"}],
          "tableName" : "supplier",
          "tableType" : "Form"
       },
@@ -43,5 +44,7 @@
          "relationshipDisplayNames" : [{"name" : "country", "value" : "citizen"}],
          "tableName" : "citizenship_rule_lookup",
          "tableType" : "Rule"
+      }], 
+      rulesDetails: [{ "assertIfAllPresent": ""
       }]
 }
