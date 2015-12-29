@@ -29,7 +29,7 @@ angular.module('appDynApp')
             		}
                 })
                 .error(function(data, status, headers, config, statusText){
-                	       alert("Failed to save the data!, returned status" + status + " data =" + JSON.stringify(data));
+                	alert("Failed to save the data!, returned status" + status + " data =" + JSON.stringify(data));
                 }
                 );
         };        
