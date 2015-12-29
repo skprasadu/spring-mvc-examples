@@ -61,6 +61,7 @@ public class UiRuleValidatorServiceImpl {
 		Rule ruleObj = (Rule) Class.forName("com.formbuilder.rule." + className + "Rule").newInstance();
 		ruleObj.setDroolString(ruleFormat);
 		ruleObj.setNameListToValidate(inputs);
+		ruleObj.setData(mapa);
 		
 		Resource myResource = ResourceFactory.newReaderResource(new StringReader(ruleObj.computeDroolsRule()));
 		kbuilder.add(myResource, ResourceType.DRL);
