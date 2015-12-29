@@ -2,8 +2,8 @@ package com.formbuilder.rule;
 
 import org.json.simple.JSONObject;
 
-public class AssertIfOneIsPresentRule extends Rule implements Evaluator{
-	
+public class AssertIfAllPresentRule extends Rule implements Evaluator{
+
 	@Override
 	public String computeDroolsRule() {
 		//String inputConditions = generateConditions(formInputForDrool);
@@ -22,6 +22,6 @@ public class AssertIfOneIsPresentRule extends Rule implements Evaluator{
 		}
 		
 		System.out.println("count=" + count);
-		return count < 2;
+		return count == names.length;
 	}
 }

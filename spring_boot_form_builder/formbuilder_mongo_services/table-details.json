@@ -3,7 +3,7 @@
    "tableDetails" : [{
          "columnNames" : "name,project_type,start_date,end_date",
          "columnDisplayNames" : [{"name" : "name", "value" : "project_code"}],
-         "ruleDetails" : [{"name" : "assertIfAllPresent", "value" : "{\"input\":\"name, project_type, start_date, end_date\"}"}],
+         "ruleDetails" : [{"name" : "checkIfOneOfTheseIsPresentValueIsPresent", "value" : "{\"when\": \"project_type != empty\", \"then\": \"start_date != empty\"}"}],
          "tableName" : "project",
          "tableType" : "Form"
       },
@@ -18,11 +18,13 @@
       {
          "columnNames" : "name,description",
          "columnDisplayNames" : [{"name": "name", "value": "sow_code"}],
+         "ruleDetails" : [{"name" : "assertIfOneIsPresent", "value" : "name,description"}],
          "tableName" : "sow",
          "tableType" : "Form"
       },
       {
          "columnNames" : "name,country_code",
+         "ruleDetails" : [{"name" : "assertIfAllPresent", "value" : "name, country_code"}],
          "tableName" : "country",
          "tableType" : "Form"
       },
@@ -45,6 +47,16 @@
          "tableName" : "citizenship_rule_lookup",
          "tableType" : "Rule"
       }], 
-      rulesDetails: [{ "assertIfAllPresent": ""
+      "uiRules": [{ 
+         "uiRuleId": "assertIfAllPresent",
+         "rule": "import java.util.Map import java.util.List import com.formbuilder.rule.Evaluator rule \"Values present\" when $rule: Evaluator(!this.eval()) $list: List() then $list.add(\"One of %s cannot be empty\"); end"
+      },
+      { 
+         "uiRuleId": "assertIfOneIsPresent",
+         "rule": "import java.util.Map import java.util.List import com.formbuilder.rule.Evaluator rule \"Values present\" when $rule: Evaluator(!this.eval()) $list: List() then $list.add(\"One of %s cannot be empty\"); end"
+      },
+      { 
+         "uiRuleId": "checkIfOneOfTheseIsPresentValueIsPresent",
+         "rule": "import java.util.Map import java.util.List rule \"Values present\" when $map: Map(%s) $list: List() then if(%s) return; $list.add(\"%s\"); end"
       }]
 }

@@ -15,7 +15,7 @@
 	</parent>
 	
 	<properties>
-		<DS>h2</DS>
+		<DS>mongo</DS>
 		<jbpm.version>6.3.0.Final</jbpm.version>
 	</properties>
 	

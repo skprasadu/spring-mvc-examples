@@ -1,26 +1,21 @@
 package com.formbuilder.rule;
 
+import java.util.Map;
+
 import org.json.simple.JSONObject;
 
 import lombok.Getter;
 import lombok.Setter;
 
 public abstract class Rule {
-	@Getter @Setter 
-	protected String input;
+	@Getter @Setter
+	protected String droolString;
+	//@Getter @Setter
+	//protected String formInputForDrool;
+	@Getter @Setter
+	protected Map<String, String> data;
+	@Getter @Setter
+	protected String nameListToValidate;
 
-	public abstract boolean evaluate(JSONObject inputJson);
-
-	public abstract String getErrorMessage();
-	
-	protected Integer getId(Object value){
-		Integer iId = null;
-		if(value instanceof String){
-			String id = (String) value;
-			iId = Integer.valueOf(id);
-		} else if(value instanceof Integer){
-			iId = (Integer)value;
-		}
-		return iId;
-	}
+	public abstract String computeDroolsRule() ;
 }

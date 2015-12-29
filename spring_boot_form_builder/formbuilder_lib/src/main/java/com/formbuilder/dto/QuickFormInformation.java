@@ -8,4 +8,5 @@ import lombok.Data;
 public class QuickFormInformation {
 	private String applicationName;
 	private List<TableDetail> tableDetails;
+	private List<UiRule> uiRules;
 }

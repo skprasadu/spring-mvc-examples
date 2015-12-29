@@ -12,16 +12,23 @@ public class UiRuleValidatorServiceImpl extends UiRuleValidatorService {
 	private JdbcTemplate jdbcTemplate;
 
 	public UiRuleValidatorServiceImpl(JdbcTemplate jdbcTemplate, int formId, JSONObject input) {
-		super( Integer.valueOf(formId).toString(), input);
+		super(Integer.valueOf(formId).toString(), input);
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.formbuilder.service.UiRuleValidatorService#getRules()
 	 */
 	@Override
 	public List<UiRule> getRules() {
 		String sql = String.format("select * from ui_rule where ui_form_id=%s", formId);
-		return jdbcTemplate.query(sql, (rs, rowNum) -> new UiRule("", rs.getString("ui_form_id"), rs.getString("clause")));
+		return jdbcTemplate.query(sql, (rs, rowNum) -> {
+			UiRule rule = new UiRule();
+			rule.setUiRuleId(rs.getString("ui_form_id"));
+			rule.setRule(rs.getString("clause"));
+			return rule;
+		});
 	}
 }

@@ -35,8 +35,8 @@ public abstract class UiRuleValidatorService {
 	}
 
 	private RuleValidationOutcome validateRule(UiRule x) {
-		try {
-			Rule clauseDetails = evaluate(x.getClause());
+		/*try {
+			Rule clauseDetails = evaluate(x.getRule());
 
 			if (clauseDetails != null && clauseDetails.evaluate(input)) {
 				return successOutcome;
@@ -47,11 +47,12 @@ public abstract class UiRuleValidatorService {
 			e.printStackTrace();
 			
 			return new RuleValidationOutcome("failure", e.getMessage() + ", please contact adminstrator");
-		}
+		}*/
+		return successOutcome;
 	}
 
-	private Rule evaluate(String clause) throws InstantiationException, IllegalAccessException, ClassNotFoundException, ParseException {
-		if (clause != null && !clause.equals("")) {
+	protected Rule evaluate(String clause) throws InstantiationException, IllegalAccessException, ClassNotFoundException, ParseException {
+		/*if (clause != null && !clause.equals("")) {
 			JSONParser parser = new JSONParser();
 			JSONObject json = (JSONObject) parser.parse(clause);
 			String action = (String) json.get("action");
@@ -63,7 +64,7 @@ public abstract class UiRuleValidatorService {
 				rule.setInput(input);
 				return rule;
 			}
-		}
+		}*/
 		return null;
 	}
 

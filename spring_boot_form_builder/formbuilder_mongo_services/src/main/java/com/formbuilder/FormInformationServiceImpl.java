@@ -73,10 +73,10 @@ public class FormInformationServiceImpl implements FormInformationService {
 	@Override
 	public JSONObject save(JSONObject input, String appName, String formId, String dataId) {
 		JSONObject json = new JSONObject();
-		uiRuleValidatorService.setInput(input);
-		uiRuleValidatorService.setFormId(formId);
-		val rvo = uiRuleValidatorService.validate(uiRuleValidatorService.getRules());
-		if (UiRuleValidatorService.success(rvo)) {
+		//uiRuleValidatorService.setInput(input);
+		//uiRuleValidatorService.setFormId(formId);
+		//val rvo = uiRuleValidatorService.validate(uiRuleValidatorService.getRules());
+		//if (UiRuleValidatorService.success(rvo)) {
 			val formTemplate = dataId.equals("0") ? findTemplateByName(appName, formId)
 					: repository.findFormData(appName, formId, dataId);
 
@@ -89,9 +89,9 @@ public class FormInformationServiceImpl implements FormInformationService {
 			dynamicUiService.combineFormDataAndInput(formTemplate, input);
 			formTemplate.setApplication(appName);
 			repository.save(formTemplate);
-		}
-		json.put("success", UiRuleValidatorService.success(rvo));
-		json.put("outcomeList", rvo);
+		//}
+		//json.put("success", UiRuleValidatorService.success(rvo));
+		//json.put("outcomeList", rvo);
 		return json;
 	}
 
@@ -222,5 +222,7 @@ public class FormInformationServiceImpl implements FormInformationService {
 		for (FormInformation formInformation : list) {
 			saveForm(formInformation, appName, "0");
 		}
+		
+		quickFormInformation.getUiRules().forEach(x -> uiRuleValidatorService.save(x));
 	}
 }

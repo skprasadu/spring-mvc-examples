@@ -31,10 +31,12 @@ public class DynamicUiService {
 	private static Logger logger = Logger.getLogger(DynamicUiService.class);
 
 	private FormInformationRepository repository;
+	private UiRuleRepository uiRuleRepository;
 
 	@Autowired
-	public DynamicUiService(FormInformationRepository repository) {
+	public DynamicUiService(FormInformationRepository repository, UiRuleRepository uiRuleRepository) {
 		this.repository = repository;
+		this.uiRuleRepository = uiRuleRepository;
 	}
 
 	public Map<String, Object> convertAttributeToUi(FormInformation root, boolean preview)

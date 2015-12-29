@@ -1,4 +1,4 @@
-package com.formbuilder;
+package com.formbuilder.mongo;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -12,7 +12,6 @@ import java.util.Map;
 
 import lombok.val;
 
-import org.json.simple.JSONObject;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -24,6 +23,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.formbuilder.Application;
+import com.formbuilder.FormInformationService;
+import com.formbuilder.UiRuleValidatorService;
 import com.formbuilder.dto.FormInformation;
 
 @RunWith(SpringJUnit4ClassRunner.class)
