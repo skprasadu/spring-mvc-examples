@@ -32,8 +32,8 @@ public class FormInformationServiceImpl implements FormInformationService {
 	private final DynamicUiService dynamicUiService;
 
 	@Autowired
-	public FormInformationServiceImpl(FormInformationRepository repository,
-			UiRuleValidatorServiceImpl uiRuleValidatorService, DynamicUiService dynamicUiService) {
+	public FormInformationServiceImpl(FormInformationRepository repository, UiRuleValidatorServiceImpl uiRuleValidatorService,
+			DynamicUiService dynamicUiService) {
 		this.repository = repository;
 		this.uiRuleValidatorService = uiRuleValidatorService;
 		this.dynamicUiService = dynamicUiService;
@@ -57,10 +57,10 @@ public class FormInformationServiceImpl implements FormInformationService {
 	@Override
 	public List<Map> findAllFormTemplates(String appName) throws Exception {
 		val i = new AtomicInteger();
-		return repository.findAllFormTemplates(appName)
-				.map(x -> new UiForm(x.getRootnode().getId(), x.getRootnode().getId(), x.getRootnode().getLabel(),
-						i.incrementAndGet(), x.getRootnode().getLabel(), x.getEntryType()))
-				.collect(Collectors.groupingBy(UiForm::getGroupBy)).entrySet().stream()
+		return repository
+				.findAllFormTemplates(appName)
+				.map(x -> new UiForm(x.getRootnode().getId(), x.getRootnode().getId(), x.getRootnode().getLabel(), i.incrementAndGet(), x
+						.getRootnode().getLabel(), x.getEntryType())).collect(Collectors.groupingBy(UiForm::getGroupBy)).entrySet().stream()
 				.map(x -> ImmutableMap.of("group", x.getKey(), "tableList", x.getValue())).collect(Collectors.toList());
 	}
 
@@ -73,12 +73,10 @@ public class FormInformationServiceImpl implements FormInformationService {
 	@Override
 	public JSONObject save(JSONObject input, String appName, String formId, String dataId) {
 		JSONObject json = new JSONObject();
-		//uiRuleValidatorService.setInput(input);
-		//uiRuleValidatorService.setFormId(formId);
-		//val rvo = uiRuleValidatorService.validate(uiRuleValidatorService.getRules());
-		//if (UiRuleValidatorService.success(rvo)) {
-			val formTemplate = dataId.equals("0") ? findTemplateByName(appName, formId)
-					: repository.findFormData(appName, formId, dataId);
+
+		val list = uiRuleValidatorService.evaluate(appName, formId, input);
+		if (list.isEmpty()) {
+			val formTemplate = dataId.equals("0") ? findTemplateByName(appName, formId) : repository.findFormData(appName, formId, dataId);
 
 			logger.debug("input" + input.toJSONString());
 			if (dataId.equals("0")) {
@@ -89,17 +87,17 @@ public class FormInformationServiceImpl implements FormInformationService {
 			dynamicUiService.combineFormDataAndInput(formTemplate, input);
 			formTemplate.setApplication(appName);
 			repository.save(formTemplate);
-		//}
-		//json.put("success", UiRuleValidatorService.success(rvo));
-		//json.put("outcomeList", rvo);
+		}
+		json.put("success", list.isEmpty());
+		json.put("outcomeList", list);
 		return json;
 	}
 
 	@Override
 	public void saveForm(FormInformation formInformation, String appName, String formId) throws Exception {
 		if (formId.equals("0")) {
-			FormInformation formInformation1 = repository.findTemplateByName(formInformation.getApplication(),
-					formInformation.getRootnode().getId());
+			FormInformation formInformation1 = repository.findTemplateByName(formInformation.getApplication(), formInformation.getRootnode()
+					.getId());
 
 			if (formInformation1 != null) {
 				throw new Exception("Form with same name exists");
@@ -115,11 +113,11 @@ public class FormInformationServiceImpl implements FormInformationService {
 	 * java.lang.String)
 	 */
 	@Override
-	public Map<String, Object> getData(String appName, String formName, String dataid)
-			throws JsonParseException, JsonMappingException, IOException {
+	public Map<String, Object> getData(String appName, String formName, String dataid) throws JsonParseException, JsonMappingException,
+			IOException {
 		logger.debug("****appName=" + appName + " formName=" + formName + " dataid=" + dataid);
-		val root = dataid.trim().equals("0") ? findTemplateByName(appName.trim(), formName.trim())
-				: repository.findFormData(appName.trim(), formName.trim(), dataid.trim());
+		val root = dataid.trim().equals("0") ? findTemplateByName(appName.trim(), formName.trim()) : repository.findFormData(appName.trim(),
+				formName.trim(), dataid.trim());
 		logger.debug("getData root=" + root);
 		val map = dynamicUiService.convertAttributeToUi(root, false);
 		logger.debug("getData map=" + map);
@@ -179,8 +177,7 @@ public class FormInformationServiceImpl implements FormInformationService {
 	}
 
 	@Override
-	public Map<String, Object> getFormPreviewData(String appName, String formName)
-			throws JsonParseException, JsonMappingException, IOException {
+	public Map<String, Object> getFormPreviewData(String appName, String formName) throws JsonParseException, JsonMappingException, IOException {
 		val root = findTemplateByName(appName.trim(), formName.trim());
 		val map = dynamicUiService.convertAttributeToUi(root, true);
 
@@ -222,7 +219,7 @@ public class FormInformationServiceImpl implements FormInformationService {
 		for (FormInformation formInformation : list) {
 			saveForm(formInformation, appName, "0");
 		}
-		
+
 		quickFormInformation.getUiRules().forEach(x -> uiRuleValidatorService.save(x));
 	}
 }

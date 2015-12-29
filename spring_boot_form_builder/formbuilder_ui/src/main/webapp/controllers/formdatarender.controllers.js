@@ -22,16 +22,10 @@ angular.module('appDynApp')
                 .success(function (data, status, headers, config) {
                 
             		if(data.success == true){
-                			alert("Database updated successfully!!!");
-                			$window.location.reload();
+            			alert("Database updated successfully!!!");
+            			$window.location.reload();
             		} else {
-            			var filteredData = data.outcomeList.filter(function (value) { 
-            				return value.outcome != 'success';
-            			}).map(function (value) { 
-            				return value.errorDetails;
-            			});
-            			
-            			alert("Failed to save the data!, errorDetails=" + JSON.stringify(filteredData));
+            			alert("Failed to save the data!, errorDetails=" + data.outcomeList);
             		}
                 })
                 .error(function(data, status, headers, config, statusText){
