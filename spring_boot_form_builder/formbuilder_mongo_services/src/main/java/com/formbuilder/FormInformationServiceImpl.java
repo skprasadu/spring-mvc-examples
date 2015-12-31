@@ -28,11 +28,11 @@ public class FormInformationServiceImpl implements FormInformationService {
 	private static Logger logger = Logger.getLogger(FormInformationServiceImpl.class);
 
 	private final FormInformationRepository repository;
-	private final UiRuleValidatorServiceImpl uiRuleValidatorService;
+	private final UiRuleValidatorService uiRuleValidatorService;
 	private final DynamicUiService dynamicUiService;
 
 	@Autowired
-	public FormInformationServiceImpl(FormInformationRepository repository, UiRuleValidatorServiceImpl uiRuleValidatorService,
+	public FormInformationServiceImpl(FormInformationRepository repository, UiRuleValidatorService uiRuleValidatorService,
 			DynamicUiService dynamicUiService) {
 		this.repository = repository;
 		this.uiRuleValidatorService = uiRuleValidatorService;

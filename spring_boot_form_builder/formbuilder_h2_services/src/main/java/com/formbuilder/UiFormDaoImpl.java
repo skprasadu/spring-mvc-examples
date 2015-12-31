@@ -28,7 +28,6 @@ import com.formbuilder.dto.ColumnDTO;
 import com.formbuilder.dto.RuleValidationOutcome;
 import com.formbuilder.dto.UiForm;
 import com.formbuilder.dto.UiFormLink;
-import com.formbuilder.service.UiRuleValidatorServiceImpl;
 
 @Repository
 public class UiFormDaoImpl implements UiFormDao {
@@ -379,9 +378,9 @@ public class UiFormDaoImpl implements UiFormDao {
 	@Override
 	public List<RuleValidationOutcome> saveFormData(String appName, int formId, int dataId, JSONObject input) throws ParseException, SQLException {
 		logger.debug(input);
-		UiRuleValidatorService uiRuleValidatorService = new UiRuleValidatorServiceImpl(jdbcTemplate, formId, input);
-		val rvo = uiRuleValidatorService.validate(uiRuleValidatorService.getRules());
-		if(UiRuleValidatorService.success(rvo)){
+		//UiRuleValidatorService uiRuleValidatorService = new UiRuleValidatorServiceImpl(jdbcTemplate, formId, input);
+		//val rvo = uiRuleValidatorService.validate(uiRuleValidatorService.getRules());
+		//if(UiRuleValidatorService.success(rvo)){
 
 			UiForm formInfo = getFormInfo(appName, formId);
 			List<ColumnDTO> columnNames = getColumnNamesFromQuery(formInfo.getFormTableName());
@@ -392,8 +391,9 @@ public class UiFormDaoImpl implements UiFormDao {
 			int query = doInsert(appName, formId, idn, formInfo.getFormTableName(), columnNames, input);
 	
 			logger.debug("result " + query);
-		}
-		return rvo;
+		//}
+		//return rvo;
+		return null;
 	}
 
 	private int doInsert(String appName, int formid, int dataId, String tableName, List<ColumnDTO> columnNames, JSONObject input) throws ParseException,

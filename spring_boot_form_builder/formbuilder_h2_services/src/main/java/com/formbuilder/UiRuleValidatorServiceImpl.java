@@ -1,19 +1,38 @@
-package com.formbuilder.service;
-
-import java.util.List;
+package com.formbuilder;
 
 import org.json.simple.JSONObject;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
 
 import com.formbuilder.UiRuleValidatorService;
+import com.formbuilder.dto.FormInformation;
 import com.formbuilder.dto.UiRule;
 
+@Service
 public class UiRuleValidatorServiceImpl extends UiRuleValidatorService {
 	private JdbcTemplate jdbcTemplate;
 
-	public UiRuleValidatorServiceImpl(JdbcTemplate jdbcTemplate, int formId, JSONObject input) {
-		super(Integer.valueOf(formId).toString(), input);
+	public UiRuleValidatorServiceImpl(JdbcTemplate jdbcTemplate) {
+		//super(Integer.valueOf(formId).toString(), input);
 		this.jdbcTemplate = jdbcTemplate;
+	}
+
+	@Override
+	public void save(UiRule rule) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected FormInformation findTemplateByName(String appName, String formId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected UiRule findRule(String name) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	/*
@@ -21,7 +40,7 @@ public class UiRuleValidatorServiceImpl extends UiRuleValidatorService {
 	 * 
 	 * @see com.formbuilder.service.UiRuleValidatorService#getRules()
 	 */
-	@Override
+	/*@Override
 	public List<UiRule> getRules() {
 		String sql = String.format("select * from ui_rule where ui_form_id=%s", formId);
 		return jdbcTemplate.query(sql, (rs, rowNum) -> {
@@ -30,5 +49,5 @@ public class UiRuleValidatorServiceImpl extends UiRuleValidatorService {
 			rule.setRule(rs.getString("clause"));
 			return rule;
 		});
-	}
+	}*/
 }

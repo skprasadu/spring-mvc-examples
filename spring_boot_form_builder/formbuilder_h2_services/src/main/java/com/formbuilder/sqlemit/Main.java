@@ -13,6 +13,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.json.simple.JSONObject;
+
 //import org.apache.log4j.Logger;
 
 public class Main {
@@ -22,6 +24,12 @@ public class Main {
 	public static void main(String[] args) throws FileNotFoundException, IOException, InstantiationException, IllegalAccessException,
 			ClassNotFoundException {
 		System.out.println("Hello");
+		
+		JSONObject json = new JSONObject();
+		
+		json.put("test", "out");
+		
+		System.out.println("test=" + json.get("test"));
 
 		Properties prop = new Properties();
 		prop.load(new FileInputStream(args[0]));

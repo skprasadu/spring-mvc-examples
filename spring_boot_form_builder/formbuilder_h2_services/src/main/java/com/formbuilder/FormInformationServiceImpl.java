@@ -20,7 +20,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.formbuilder.dto.FormInformation;
 import com.formbuilder.dto.RuleValidationOutcome;
 import com.formbuilder.dto.UiForm;
-import com.formbuilder.service.UiRuleValidatorServiceImpl;
 
 @Service
 public class FormInformationServiceImpl implements FormInformationService {
@@ -144,8 +143,8 @@ public class FormInformationServiceImpl implements FormInformationService {
 			Integer iDataId = Integer.valueOf(dataId);
 			Integer iFormId = Integer.valueOf(formId);
 			List<RuleValidationOutcome> outcomes = repository.saveFormData(appName, iFormId, iDataId, input);
-			json.put("success", UiRuleValidatorServiceImpl.success(outcomes));
-			json.put("outcomeList", outcomes);
+			//json.put("success", UiRuleValidatorServiceImpl.success(outcomes));
+			//json.put("outcomeList", outcomes);
 		} catch (ParseException | SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

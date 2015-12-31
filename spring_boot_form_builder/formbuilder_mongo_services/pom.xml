@@ -14,10 +14,6 @@
 		<version>1.3.0.RELEASE</version>
 	</parent>
 
-	<properties>
-		<jbpm.version>6.3.0.Final</jbpm.version>
-	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>com.googlecode.json-simple</groupId>
@@ -75,21 +71,6 @@
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>19.0-rc3</version>
-		</dependency>
-		<dependency>
-			<groupId>org.drools</groupId>
-			<artifactId>drools-compiler</artifactId>
-			<version>${jbpm.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.drools</groupId>
-			<artifactId>named-kiesession</artifactId>
-			<version>${jbpm.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.kie</groupId>
-			<artifactId>kie-api</artifactId>
-			<version>${jbpm.version}</version>
 		</dependency>
 	</dependencies>
 
