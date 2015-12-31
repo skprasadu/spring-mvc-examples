@@ -1,12 +1,14 @@
-package com.formbuilder.sqlemit;
+package com.formbuilder.sqlemitwithjson;
+
+import com.formbuilder.dto.TableDetail;
 
 public class RuleSqlEmitter extends SqlEmitter {
 
 	@Override
-	public void emit(String appName, String tableName, String[] column, String[] relationship, int orderBy, StringBuffer ddlScripts,
-			StringBuffer dmlScripts) {
-		ddlScripts.append(String.format("CREATE Table %s (", tableName) + System.lineSeparator());
+	public void emit(String appName, TableDetail tableDetail, int orderBy, StringBuffer ddlScripts, StringBuffer dmlScripts) {
+		ddlScripts.append(String.format("CREATE Table %s (", tableDetail.getTableName()) + System.lineSeparator());
 		String nameColumn = "name";
+		String[] column = tableDetail.getColumnNames().split(",");
 		for (String col : column) {
 			String[] st = col.split(":");
 			if (st.length == 2) {
@@ -15,6 +17,7 @@ public class RuleSqlEmitter extends SqlEmitter {
 		}
 
 		int i = 0;
+		String[] relationship = tableDetail.getRelationshipNames().split(",");
 		for (String rel : relationship) {
 			String[] st = rel.split(":");
 			String relName = st.length == 1 ? st[0] : st[1] + "__" + st[0];
@@ -33,6 +36,6 @@ public class RuleSqlEmitter extends SqlEmitter {
 		ddlScripts.append(closeCreate + System.lineSeparator());
 
 		// Insert Script
-		insertUiForm(dmlScripts, tableName, nameColumn, orderBy, "Rule");
+		insertUiForm(dmlScripts, tableDetail.getTableName(), nameColumn, orderBy, "Rule", tableDetail.getRuleDetails());
 	}
 }

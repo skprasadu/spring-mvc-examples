@@ -1,6 +1,7 @@
 package com.formbuilder;
 
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -10,8 +11,9 @@ import com.formbuilder.dto.UiRule;
 
 @Service
 public class UiRuleValidatorServiceImpl extends UiRuleValidatorService {
-	private JdbcTemplate jdbcTemplate;
+	final private JdbcTemplate jdbcTemplate;
 
+	@Autowired
 	public UiRuleValidatorServiceImpl(JdbcTemplate jdbcTemplate) {
 		//super(Integer.valueOf(formId).toString(), input);
 		this.jdbcTemplate = jdbcTemplate;

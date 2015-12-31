@@ -101,7 +101,7 @@
 							<goal>java</goal>
 						</goals>
 						<configuration>
-							<mainClass>com.formbuilder.sqlemit.Main</mainClass>
+							<mainClass>com.formbuilder.sqlemitwithjson.Main</mainClass>
 							<arguments>
 								<argument>${basedir}/schema-details.properties</argument>
 							</arguments>
