@@ -24,13 +24,14 @@ import com.formbuilder.dto.UiForm;
 @Service
 public class FormInformationServiceImpl implements FormInformationService {
 
-	// private final FormInformationRepository repository;
+	private final UiRuleValidatorService uiRuleValidatorService;
 	private final UiFormDao repository;
 	private static Logger logger = Logger.getLogger(FormInformationServiceImpl.class);
 
 	@Autowired
-	public FormInformationServiceImpl(UiFormDao repository) {
+	public FormInformationServiceImpl(UiFormDao repository, UiRuleValidatorService uiRuleValidatorService) {
 		this.repository = repository;
+		this.uiRuleValidatorService = uiRuleValidatorService;
 	}
 
 	/*
@@ -140,11 +141,14 @@ public class FormInformationServiceImpl implements FormInformationService {
 	public JSONObject save(JSONObject input, String appName, String formId, String dataId) {
 		JSONObject json = new JSONObject();
 		try {
-			Integer iDataId = Integer.valueOf(dataId);
-			Integer iFormId = Integer.valueOf(formId);
-			List<RuleValidationOutcome> outcomes = repository.saveFormData(appName, iFormId, iDataId, input);
-			//json.put("success", UiRuleValidatorServiceImpl.success(outcomes));
-			//json.put("outcomeList", outcomes);
+			val list = uiRuleValidatorService.evaluate(appName, formId, input);
+			if (list.isEmpty()) {
+				Integer iDataId = Integer.valueOf(dataId);
+				Integer iFormId = Integer.valueOf(formId);
+				repository.saveFormData(appName, iFormId, iDataId, input);
+			}
+			json.put("success", list.isEmpty());
+			json.put("outcomeList", list);
 		} catch (ParseException | SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

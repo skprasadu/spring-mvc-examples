@@ -15,4 +15,8 @@ public class UiForm {
 	private final String nameColumnDisplayName;
 	
 	private final String groupBy;
+	
+	private final String validator;
+	
+	private final String validatorInputs;
 }

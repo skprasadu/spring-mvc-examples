@@ -27,7 +27,7 @@ public class Main {
 
 	public static void main(String[] args) throws Exception {
 		val mapper = new ObjectMapper();
-		String quickData = readFile("table-details.json");
+		String quickData = readFile(args[0]);
 		val quickFormInformation = mapper.readValue(quickData, QuickFormInformation.class);
 
 		StringBuffer ddlScripts = new StringBuffer();

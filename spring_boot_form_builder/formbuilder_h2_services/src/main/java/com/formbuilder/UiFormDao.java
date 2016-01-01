@@ -23,7 +23,7 @@ public interface UiFormDao {
 
 	public abstract List<Map> getFormDataList(String appName, int formId);
 
-	public abstract List<RuleValidationOutcome> saveFormData(String appName, int formId,int dataId, JSONObject input) throws ParseException, SQLException;
+	public abstract int saveFormData(String appName, int formId,int dataId, JSONObject input) throws ParseException, SQLException;
 
 	public int deleteRow(String appName, int rowId,int formId) throws SQLException;
 

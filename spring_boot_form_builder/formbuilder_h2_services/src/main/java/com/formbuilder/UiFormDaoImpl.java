@@ -106,7 +106,8 @@ public class UiFormDaoImpl implements UiFormDao {
 
 	private UiForm getUiForm(ResultSet rs) throws SQLException {
 		return new UiForm(rs.getString("id"), rs.getString("form_table_name"), rs.getString("display_name"), 
-				rs.getInt("order_by"), rs.getString("name_column_display_name"), rs.getString("group_by"));
+				rs.getInt("order_by"), rs.getString("name_column_display_name"), rs.getString("group_by"), 
+				rs.getString("validator"), rs.getString("validator_inputs"));
 	}
 
 	private String getDisplayName(String name) {
@@ -376,24 +377,19 @@ public class UiFormDaoImpl implements UiFormDao {
 	 * org.json.simple.JSONObject)
 	 */
 	@Override
-	public List<RuleValidationOutcome> saveFormData(String appName, int formId, int dataId, JSONObject input) throws ParseException, SQLException {
+	public int saveFormData(String appName, int formId, int dataId, JSONObject input) throws ParseException, SQLException {
 		logger.debug(input);
-		//UiRuleValidatorService uiRuleValidatorService = new UiRuleValidatorServiceImpl(jdbcTemplate, formId, input);
-		//val rvo = uiRuleValidatorService.validate(uiRuleValidatorService.getRules());
-		//if(UiRuleValidatorService.success(rvo)){
 
-			UiForm formInfo = getFormInfo(appName, formId);
-			List<ColumnDTO> columnNames = getColumnNamesFromQuery(formInfo.getFormTableName());
-	
-			Boolean saveAsNew = (Boolean) input.get("save_as_new");
-			Integer idn = (saveAsNew != null && saveAsNew) ? 0 : dataId;
-	
-			int query = doInsert(appName, formId, idn, formInfo.getFormTableName(), columnNames, input);
-	
-			logger.debug("result " + query);
-		//}
-		//return rvo;
-		return null;
+		UiForm formInfo = getFormInfo(appName, formId);
+		List<ColumnDTO> columnNames = getColumnNamesFromQuery(formInfo.getFormTableName());
+
+		Boolean saveAsNew = (Boolean) input.get("save_as_new");
+		Integer idn = (saveAsNew != null && saveAsNew) ? 0 : dataId;
+
+		int query = doInsert(appName, formId, idn, formInfo.getFormTableName(), columnNames, input);
+
+		logger.debug("result " + query);
+		return query;
 	}
 
 	private int doInsert(String appName, int formid, int dataId, String tableName, List<ColumnDTO> columnNames, JSONObject input) throws ParseException,

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.formbuilder.dto.FormInformation;
+import com.formbuilder.dto.NameValue;
 import com.formbuilder.dto.UiRule;
 
 @Service
@@ -25,8 +26,9 @@ public class UiRuleValidatorServiceImpl extends UiRuleValidatorService {
 	}
 
 	@Override
-	protected FormInformation findTemplateByName(String appName, String formId) {
-		return formInformationRepository.findTemplateByName(appName, formId);
+	protected NameValue findTemplateByName(String appName, String formId) {
+		FormInformation info = formInformationRepository.findTemplateByName(appName, formId);
+		return info.getRuleDetails().get(0);
 	}
 
 	@Override

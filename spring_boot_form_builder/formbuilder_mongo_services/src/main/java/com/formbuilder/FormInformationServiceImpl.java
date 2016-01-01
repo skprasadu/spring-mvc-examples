@@ -60,7 +60,7 @@ public class FormInformationServiceImpl implements FormInformationService {
 		return repository
 				.findAllFormTemplates(appName)
 				.map(x -> new UiForm(x.getRootnode().getId(), x.getRootnode().getId(), x.getRootnode().getLabel(), i.incrementAndGet(), x
-						.getRootnode().getLabel(), x.getEntryType())).collect(Collectors.groupingBy(UiForm::getGroupBy)).entrySet().stream()
+						.getRootnode().getLabel(), x.getEntryType(), "", "")).collect(Collectors.groupingBy(UiForm::getGroupBy)).entrySet().stream()
 				.map(x -> ImmutableMap.of("group", x.getKey(), "tableList", x.getValue())).collect(Collectors.toList());
 	}
 
